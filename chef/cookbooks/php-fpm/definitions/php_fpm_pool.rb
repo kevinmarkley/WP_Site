@@ -48,11 +48,7 @@ define :php_fpm_pool, :template => "pool.conf.erb", :enable => true do
         :max_requests => params[:max_requests],
         :catch_workers_output => params[:catch_workers_output],
         :security_limit_extensions => params[:security_limit_extensions] || node['php-fpm']['security_limit_extensions'],
-        :access_log => params[:access_log] || false,
-        :slowlog => params[:slowlog] || false,
-        :request_slowlog_timeout => params[:request_slowlog_timeout] || false,
         :php_options => params[:php_options] || {},
-        :request_terminate_timeout => params[:request_terminate_timeout],
         :params => params
       )
       notifies :restart, "service[php-fpm]"
