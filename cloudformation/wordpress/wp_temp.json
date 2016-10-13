@@ -8,51 +8,29 @@
     "WPAdmin" : {
       "Default": "WPAdmin",
       "Description" : "The WordPress Admin Name",
-      "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "64",
-      "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
-      "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
+      "Type": "String"
     },
 
     "WPAdminPass" : {
       "Default": "WPpassAD",
       "Description" : "The WordPress Admin Password",
-      "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "64",
-      "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
-      "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
+      "Type": "String"
     },
 
     "WPAdminEmail" : {
       "Default": "kevinmarkley@gmail.com",
       "Description" : "The WordPress Admin Email",
-      "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "64",
-      "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
-      "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
+      "Type": "String"
     },
 
-    "WPuser" : {
-      "Default": "WPuser",
-      "Description" : "The WordPress Admin Name",
+    "AllowHTTP" : {
+      "Description" : "The IP address range that can access EC2 instances on Http port 80",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "64",
-      "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
-      "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
-    },
-
-    "WPuserPass" : {
-      "Default": "WPuserAD",
-      "Description" : "The WordPress Admin Name",
-      "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "64",
-      "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
-      "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
+      "MinLength": "9",
+      "MaxLength": "18",
+      "Default": "0.0.0.0/0",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "must be a valid IP CIDR range of the form x.x.x.x/x."
     },
 
     "KeyName": {
@@ -130,7 +108,7 @@
 
     "WebServerCapacity": {
       "Default": "1",
-      "Description" : "The initial nuber of web server instances",
+      "Description" : "The initial number of web server instances",
       "Type": "Number",
       "MinValue": "1",
       "MaxValue": "5",
@@ -322,10 +300,11 @@
         "VpcId" : { "Ref" : "VPC" },
         "GroupDescription" : "Enable SSH access via port 22",
         "SecurityGroupIngress" : [
-          {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "0.0.0.0/0"},
-          {"IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : { "Ref" : "AllowHTTP"}}
-        ]
+          {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "73.170.14.149/24"},
+          {"IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : { "Ref" : "AllowHTTP"}}],
+        "SecurityGroupEgress" : []
       }
+
     },
 
     "InstanceSecurityGroupIngress" : {
@@ -339,7 +318,7 @@
 
 
   "ChefRun": {
-    "Type" : "AWS::AutoScaling::Instance",
+    "Type" : "AWS::EC2::Instance",
     "Metadata" : {
       "Comment" : "Installing Chef",
       "AWS::CloudFormation::Init" : {
@@ -415,7 +394,7 @@
         "# Create json file with specific attributes ",
         "cat > /root/chef/attributes/chef_attributes.json << EOF\n",
         "{\n",
-        "   \"run_list\": [\"my-wordpress\"", "],\n",
+        "   \"run_list\": [\"chef-server-markley\"", "],\n",
         "   \"cloud\": {\n",
         "    \"WPAdmin\": \"", {"Ref" : "WPAdmin"} , "\", \n",
         "    \"WPAdminPass\": \"", {"Ref" : "WPAdminPass"} , "\", \n",
@@ -441,8 +420,7 @@
 
 
       ]]}}
-    }
-  },
+    },
 
   "CreationPolicy" : {
     "ResourceSignal" : {
@@ -452,152 +430,197 @@
 },
 
   "WordpressRun" : {
-    "Type" : "AWS::AutoScaling::Instance",
-    "Metadata" : {
-      "Comment" : "Installing Chef",
-      "AWS::CloudFormation::Init" : {
-        "config" : {
-          "packages" : {
-            "yum" : {
-              "git"               : [],
-              "subversion"        : []
+    "Type": "AWS::EC2::Instance",
+    "Metadata": {
+      "Comment": "Installing Chef",
+      "AWS::CloudFormation::Init": {
+        "config": {
+          "packages": {
+            "yum": {
+              "git": [],
+              "subversion": []
             }
           }
         }
       }
     },
-    "Properties" : {
-      "ImageId": { "Fn::FindInMap": [ "AWSRegionArch2AMI", { "Ref": "AWS::Region" }, "64" ]},
-      "InstanceType" : "t2.small",
+    "Properties": {
+      "ImageId": "ami-c481fad3",
+      "InstanceType": "t2.small",
       "KeyName": "kmarkley",
-      "NetworkInterfaces" : [{
-        "GroupSet"                 : [{ "Ref" : "InstanceSecurityGroup" }],
-        "AssociatePublicIpAddress" : "true",
-        "DeviceIndex"              : "0",
-        "DeleteOnTermination"      : "true",
-        "SubnetId"                 : { "Ref" : "Subnet" }
-      }],
-      "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
-        "#!/bin/bash -xe\n",
-        "yum update -y aws-cfn-bootstrap\n",
-
-        "/opt/aws/bin/cfn-init -v ",
-        "         --stack ", { "Ref" : "AWS::StackName" },
-        "         --resource WordpressRun ",
-        "         --region ", { "Ref" : "AWS::Region" }, "\n",
-
-        "# Chef install/update.\n",
-        "cat <<'EOF' >> /root/chef-check.sh\n",
-        "#!/bin/bash\n",
-        "VERSION=\"12.10.24\"\n",
-        "if rpm -qa | grep chef | grep $VERSION; then\n",
-        "   exit\n",
-        "elif rpm -qa | grep chef | grep -v $VERSION; then\n",
-        "   rpm -e chef && curl -L \"http://www.opscode.com/chef/download?p=el&pv=6&m=x86_64&v=$VERSION\" -o chef-install && rpm -Uvh chef-install\n",
-        "else\n",
-        "   curl -L \"http://www.opscode.com/chef/download?p=el&pv=6&m=x86_64&v=$VERSION\" -o chef-install && rpm -Uvh chef-install\n",
-        "fi\n",
-        "EOF\n",
-
-
-        "# Clone github repo\n",
-        "cat <<'EOF' >> /root/git-setup.sh\n",
-        "#!/bin/bash\n",
-        "cd /\n",
-        "svn export https://github.com/tbojorqu/wordpress/trunk/chef/cookbooks/\n",
-        "EOF\n",
-
-
-        "# Create key file\n",
-        "cat > /root/.ssh/key.pem << EOF\n",
-        "-----BEGIN RSA PRIVATE KEY-----\n",
-        "MIIEowIBAAKCAQEAuE1aJZQjXkuIz034/62XonrryWW7T1xjMZwyKrkwbwk9W/ao\n",
-        "dj06d8lWVENURFuA/Mx71hUKn7uv9zbndFMrPi2RnPE+svH+79HQS1sBzOLAcSuZ\n",
-        "woNUDBs3UuTNk/YSCBMgtVmRo5FZEzmUy5Qv0VPXCZpx5nsaAzQNGy2pSh9nFr+5\n",
-        "bsUUBHl8BONwagwr0f1nD+ResVbSbQqmuhHK0pplHCQ/Czz2AoilASOna/R8Cl7M\n",
-        "rp4/iUaP9LdqMh6hdgc9l9yaeGxJN6qZwq4ZVMMnFwoQBjVW1cKndC1XaplfwmKM\n",
-        "NbJguUNIE6Yx9NrwFkcysO6esLTW5NmUy961SQIDAQABAoIBAQCH5Kk6mi82ARYA\n",
-        "XSrjQ1lSebZPys5BJwsQ8m3fKKt4w+RVYds3S9BHsNIR0Y9Z0+qY/CG3ac5qlxaZ\n",
-        "fwdMs2JoN2ttwEgN4/epVxhx58m9C9j/2TlHvlQDlTHG0mRu2/rRr2DntwJ3C94V\n",
-        "GdkH/tz/SQV+1D11x4EXqZKcXp+7wYhnmSNjOrf2vlSSgwOfpUcGFWmmTFF7Eo7G\n",
-        "cNBRJpqzn/3CxmAh1+Edq6yPMigoHRmpl2R5v8gYYD+bYtPVXDg9agz8RG0mnrxl\n",
-        "vL27sW7K9ez5y1FYG2lr2hNHnwwp1IH+3MrP9eqNszmsLXiU+yOCBgjOuIWvSq8H\n",
-        "jLImWIu9AoGBAOxXLj/VlEddPfeGo9p91v6Klk4ZAAZURegHM/VkCKhExobU/85u\n",
-        "90VckbU95tAv826omhDtHX/lwuqQGKKw+t1YqFM2o8+0jmaRDvNao2SB+l4YKYRH\n",
-        "81VZH90wH9ZUtLxq2B6VJ8d2SkSZytdDjAP8PsK9PM+LzoqveIo4wblXAoGBAMei\n",
-        "BocD9wLiGUr3aJrZ8RvSNdiq/11R8i8/HAT985W0CUBBJ72nS/EHNGeF1W2Xgnh4\n",
-        "jw/uFj1N5CjMeqHOHWJtaBmAQOUx6+MVLNzDfq+bviyZTvGOoK2MiBgox05GrQov\n",
-        "FrfKa8jdA8AAp9n47d25EQqpWFmt+E2FZuxfUcJfAoGABd/g4WtQpTl3Gdj556tr\n",
-        "FaaiN8y9SGr91def/gB/ipczDBTtStdNRCcZ5BRm0VPvzBdaxQLv0ccHQkdUpW6a\n",
-        "vbe/b1oTVk1ZoMkIQxpEp3HnpEEbfxM+xCdT+G6CzBQM7gYF2zS/6WBSVkQwW4tt\n",
-        "RogVk0ea5FnIR4A3EdB5WD8CgYBehIscn7byyYP6J3uCXY+3gWZ3KDbxwxusXO/y\n",
-        "OR58EZqTroWXWL8u5h9cqFPtqF9glIv/mdUzv044NuAU/daRxIUWFdAj8+fgQyVT\n",
-        "fMfdcxquWQO0gLf4k2HYNm5u1C2XdcYGzLMNjf75iBXwsNhGMxordxRamXDHm1Ko\n",
-        "tVSrdwKBgGaWPmx9oFzh9Vr6LTwwnxZTyqjK4KD1hvnOVP1JFZPVQPp5JwIUjhwK\n",
-        "DUZ0FSoj4ZdMmk7UtemRpEmiAVkzVP7+sSB+eIVHe51SLzKFEfMfv2cCbTOU3W2I\n",
-        "SrPL2Ia5hwJzFJrNoMQKWMm10Pz60QH79I9NaNzNRd/Ruxj7i9ld\n",
-        "-----END RSA PRIVATE KEY-----\n",
-        "EOF\n",
-        "chmod 600 /root/.ssh/key.pem\n",
-
-
-        "CHEF_SERVER=\"", { "Fn::GetAtt": [ "ChefRun", "PrivateIp" ]}, "\"\n",
-
-        "WP_SERVER=`curl -s http://169.254.169.254/latest/meta-data/public-ipv4`\n",
-
-        "mkdir -p /etc/chef\n",
-
-        "# Get chef certs\n",
-        "scp -o StrictHostKeyChecking=no -i /root/.ssh/key.pem ec2-user@$CHEF_SERVER:/tmp/kmarkley-validator.pem /etc/chef\n",
-
-        "cat > /etc/chef/client.rb << EOF\n",
-        "current_dir = File.dirname(__FILE__)\n",
-        "log_level       :info\n",
-        "log_location     \"/var/log/chef-client.log\"\n",
-        "ssl_verify_mode :verify_none\n",
-        "node_name \"wordpress\"\n",
-        "validation_client_name  'markley-validator'\n",
-        "validation_key          \"#{current_dir}/kmarkley-validator.pem\"\n",
-        "chef_server_url         \"https://$CHEF_SERVER/organizations/markley\"\n",
-        "cookbook_path            [\"/cookbooks\"]\n",
-        "EOF\n",
-
-        "# Node attributes to be seeded during first run\n",
-        "cat > /etc/chef/roles.json << EOF\n",
-        "{\n",
-        "  \"run_list\": [\"my-wordpress\"", "],\n",
-        "  \"cloud\": {\n",
-        "    \"chef_server\": \"", { "Fn::GetAtt": [ "ChefRun", "PrivateIp" ]} , "\", \n",
-        "    \"wp_user\": \"", {"Ref" : "WPUser"} , "\", \n",
-        "    \"wp_password\": \"", {"Ref" : "WPPassword"} , "\", \n",
-        "    \"wp_email\": \"", {"Ref" : "WPEmail"} , "\", \n",
-        "    \"wp_server\": \"$WP_SERVER\", \n",
-        "    \"region_from_template\": \"", {"Ref" : "AWS::Region"} , "\" \n",
-        "  } \n",
-        "}\n",
-        "EOF\n",
-
-        "# Run chef-client to install wordpress\n",
-        "cat <<'EOF' >> /root/run-chef.sh\n",
-        "#!/bin/bash\n",
-        "cd /root\n",
-        "chef-client -j /etc/chef/roles.json -N wordpress\n",
-        "EOF\n",
-        "chmod 755 /root/run-chef.sh\n",
-        "/root/run-chef.sh > /var/log/chef-client.log 2>&1 || error_exit 'Failed to initialize wordpress via chef client'\n",
-
-        "/opt/aws/bin/cfn-signal -e $? ",
-        "         --stack ", { "Ref" : "AWS::StackName" },
-        "         --resource WordpressRun ",
-        "         --region ", { "Ref" : "AWS::Region" }, "\n"
-      ]]}}
-    },
-      "CreationPolicy" : {
-        "ResourceSignal" : {
-          "Timeout" : "PT15M"
+      "NetworkInterfaces": [
+        {
+          "GroupSet": [
+            {
+              "Ref": "InstanceSecurityGroup"
+            }
+          ],
+          "AssociatePublicIpAddress": "true",
+          "DeviceIndex": "0",
+          "DeleteOnTermination": "true",
+          "SubnetId": {
+            "Ref": "Subnet"
+          }
+        }
+      ],
+      "UserData": {
+        "Fn::Base64": {
+          "Fn::Join": [
+            "",
+            [
+              "#!/bin/bash -xe\n",
+              "yum update -y aws-cfn-bootstrap\n",
+              "/opt/aws/bin/cfn-init -v ",
+              "         --stack ",
+              {
+                "Ref": "AWS::StackName"
+              },
+              "         --resource WordpressRun ",
+              "         --region ",
+              {
+                "Ref": "AWS::Region"
+              },
+              "\n",
+              "# Chef install/update.\n",
+              "cat <<'EOF' >> /root/chef-check.sh\n",
+              "#!/bin/bash\n",
+              "VERSION=\"12.10.24\"\n",
+              "if rpm -qa | grep chef | grep $VERSION; then\n",
+              "   exit\n",
+              "elif rpm -qa | grep chef | grep -v $VERSION; then\n",
+              "   rpm -e chef && curl -L \"http://www.opscode.com/chef/download?p=el&pv=6&m=x86_64&v=$VERSION\" -o chef-install && rpm -Uvh chef-install\n",
+              "else\n",
+              "   curl -L \"http://www.opscode.com/chef/download?p=el&pv=6&m=x86_64&v=$VERSION\" -o chef-install && rpm -Uvh chef-install\n",
+              "fi\n",
+              "EOF\n",
+              "# Clone github repo\n",
+              "cat <<'EOF' >> /root/git-setup.sh\n",
+              "#!/bin/bash\n",
+              "cd /\n",
+              "svn export https://github.com/tbojorqu/wordpress/trunk/chef/cookbooks/\n",
+              "EOF\n",
+              "# Create key file\n",
+              "cat > /root/.ssh/key.pem << EOF\n",
+              "-----BEGIN RSA PRIVATE KEY-----\n",
+              "MIIEowIBAAKCAQEAuE1aJZQjXkuIz034/62XonrryWW7T1xjMZwyKrkwbwk9W/ao\n",
+              "dj06d8lWVENURFuA/Mx71hUKn7uv9zbndFMrPi2RnPE+svH+79HQS1sBzOLAcSuZ\n",
+              "woNUDBs3UuTNk/YSCBMgtVmRo5FZEzmUy5Qv0VPXCZpx5nsaAzQNGy2pSh9nFr+5\n",
+              "bsUUBHl8BONwagwr0f1nD+ResVbSbQqmuhHK0pplHCQ/Czz2AoilASOna/R8Cl7M\n",
+              "rp4/iUaP9LdqMh6hdgc9l9yaeGxJN6qZwq4ZVMMnFwoQBjVW1cKndC1XaplfwmKM\n",
+              "NbJguUNIE6Yx9NrwFkcysO6esLTW5NmUy961SQIDAQABAoIBAQCH5Kk6mi82ARYA\n",
+              "XSrjQ1lSebZPys5BJwsQ8m3fKKt4w+RVYds3S9BHsNIR0Y9Z0+qY/CG3ac5qlxaZ\n",
+              "fwdMs2JoN2ttwEgN4/epVxhx58m9C9j/2TlHvlQDlTHG0mRu2/rRr2DntwJ3C94V\n",
+              "GdkH/tz/SQV+1D11x4EXqZKcXp+7wYhnmSNjOrf2vlSSgwOfpUcGFWmmTFF7Eo7G\n",
+              "cNBRJpqzn/3CxmAh1+Edq6yPMigoHRmpl2R5v8gYYD+bYtPVXDg9agz8RG0mnrxl\n",
+              "vL27sW7K9ez5y1FYG2lr2hNHnwwp1IH+3MrP9eqNszmsLXiU+yOCBgjOuIWvSq8H\n",
+              "jLImWIu9AoGBAOxXLj/VlEddPfeGo9p91v6Klk4ZAAZURegHM/VkCKhExobU/85u\n",
+              "90VckbU95tAv826omhDtHX/lwuqQGKKw+t1YqFM2o8+0jmaRDvNao2SB+l4YKYRH\n",
+              "81VZH90wH9ZUtLxq2B6VJ8d2SkSZytdDjAP8PsK9PM+LzoqveIo4wblXAoGBAMei\n",
+              "BocD9wLiGUr3aJrZ8RvSNdiq/11R8i8/HAT985W0CUBBJ72nS/EHNGeF1W2Xgnh4\n",
+              "jw/uFj1N5CjMeqHOHWJtaBmAQOUx6+MVLNzDfq+bviyZTvGOoK2MiBgox05GrQov\n",
+              "FrfKa8jdA8AAp9n47d25EQqpWFmt+E2FZuxfUcJfAoGABd/g4WtQpTl3Gdj556tr\n",
+              "FaaiN8y9SGr91def/gB/ipczDBTtStdNRCcZ5BRm0VPvzBdaxQLv0ccHQkdUpW6a\n",
+              "vbe/b1oTVk1ZoMkIQxpEp3HnpEEbfxM+xCdT+G6CzBQM7gYF2zS/6WBSVkQwW4tt\n",
+              "RogVk0ea5FnIR4A3EdB5WD8CgYBehIscn7byyYP6J3uCXY+3gWZ3KDbxwxusXO/y\n",
+              "OR58EZqTroWXWL8u5h9cqFPtqF9glIv/mdUzv044NuAU/daRxIUWFdAj8+fgQyVT\n",
+              "fMfdcxquWQO0gLf4k2HYNm5u1C2XdcYGzLMNjf75iBXwsNhGMxordxRamXDHm1Ko\n",
+              "tVSrdwKBgGaWPmx9oFzh9Vr6LTwwnxZTyqjK4KD1hvnOVP1JFZPVQPp5JwIUjhwK\n",
+              "DUZ0FSoj4ZdMmk7UtemRpEmiAVkzVP7+sSB+eIVHe51SLzKFEfMfv2cCbTOU3W2I\n",
+              "SrPL2Ia5hwJzFJrNoMQKWMm10Pz60QH79I9NaNzNRd/Ruxj7i9ld\n",
+              "-----END RSA PRIVATE KEY-----\n",
+              "EOF\n",
+              "chmod 600 /root/.ssh/key.pem\n",
+              "CHEF_SERVER=\"",
+              {
+                "Fn::GetAtt": [
+                  "ChefRun",
+                  "PrivateIp"
+                ]
+              },
+              "\"\n",
+              "WP_SERVER=`curl -s http://169.254.169.254/latest/meta-data/public-ipv4`\n",
+              "mkdir -p /etc/chef\n",
+              "# Get chef certs\n",
+              "scp -o StrictHostKeyChecking=no -i /root/.ssh/key.pem ec2-user@$CHEF_SERVER:/tmp/kmarkley-validator.pem /etc/chef\n",
+              "cat > /etc/chef/client.rb << EOF\n",
+              "current_dir = File.dirname(__FILE__)\n",
+              "log_level       :info\n",
+              "log_location     \"/var/log/chef-client.log\"\n",
+              "ssl_verify_mode :verify_none\n",
+              "node_name \"wordpress\"\n",
+              "validation_client_name  'markley-validator'\n",
+              "validation_key          \"#{current_dir}/kmarkley-validator.pem\"\n",
+              "chef_server_url         \"https://$CHEF_SERVER/organizations/markley\"\n",
+              "cookbook_path            [\"/cookbooks\"]\n",
+              "EOF\n",
+              "# Node attributes to be seeded during first run\n",
+              "cat > /etc/chef/roles.json << EOF\n",
+              "{\n",
+              "  \"run_list\": [\"wordpress-markley\"",
+              "],\n",
+              "  \"cloud\": {\n",
+              "    \"chef_server\": \"",
+              {
+                "Fn::GetAtt": [
+                  "ChefRun",
+                  "PrivateIp"
+                ]
+              },
+              "\", \n",
+              "    \"WPUser\": \"",
+              {
+                "Ref": "WPAdmin"
+              },
+              "\", \n",
+              "    \"WP_admin_Pass\": \"",
+              {
+                "Ref": "WPAdminPass"
+              },
+              "\", \n",
+              "    \"wp_email\": \"",
+              {
+                "Ref": "WPAdminEmail"
+              },
+              "\", \n",
+              "    \"wp_server\": \"$WP_SERVER\", \n",
+              "    \"region_from_template\": \"",
+              {
+                "Ref": "AWS::Region"
+              },
+              "\" \n",
+              "  } \n",
+              "}\n",
+              "EOF\n",
+              "# Run chef-client to install wordpress\n",
+              "cat <<'EOF' >> /root/run-chef.sh\n",
+              "#!/bin/bash\n",
+              "cd /root\n",
+              "chef-client -j /etc/chef/roles.json -N wordpress\n",
+              "EOF\n",
+              "chmod 755 /root/run-chef.sh\n",
+              "/root/run-chef.sh > /var/log/chef-client.log 2>&1 || error_exit 'Failed to initialize wordpress via chef client'\n",
+              "/opt/aws/bin/cfn-signal -e $? ",
+              "         --stack ",
+              {
+                "Ref": "AWS::StackName"
+              },
+              "         --resource WordpressRun ",
+              "         --region ",
+              {
+                "Ref": "AWS::Region"
+              },
+              "\n"
+            ]
+          ]
         }
       }
-
+    },
+    "CreationPolicy": {
+      "ResourceSignal": {
+        "Timeout": "PT10M"
+      }
+    }
+  }
   },
 
 
