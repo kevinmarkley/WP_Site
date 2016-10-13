@@ -333,7 +333,7 @@
       }
     },
     "Properties" : {
-      "ImageId":  "ami-c481fad3" ,
+      "ImageId":  "ami-de347abe" ,
       "InstanceType" : "t2.small",
       "KeyName": "kmarkley",
       "NetworkInterfaces" : [{
@@ -445,7 +445,7 @@
       }
     },
     "Properties": {
-      "ImageId": "ami-c481fad3",
+      "ImageId": "ami-de347abe",
       "InstanceType": "t2.small",
       "KeyName": "kmarkley",
       "NetworkInterfaces": [
