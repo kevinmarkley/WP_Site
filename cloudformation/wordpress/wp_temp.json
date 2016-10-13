@@ -483,7 +483,7 @@
 
         "/opt/aws/bin/cfn-init -v ",
         "         --stack ", { "Ref" : "AWS::StackName" },
-        "         --resource WordpressInstance ",
+        "         --resource WordpressRun ",
         "         --region ", { "Ref" : "AWS::Region" }, "\n",
 
         "# Chef install/update.\n",
@@ -588,7 +588,7 @@
 
         "/opt/aws/bin/cfn-signal -e $? ",
         "         --stack ", { "Ref" : "AWS::StackName" },
-        "         --resource WordpressInstance ",
+        "         --resource WordpressRun ",
         "         --region ", { "Ref" : "AWS::Region" }, "\n"
       ]]}}
     },
