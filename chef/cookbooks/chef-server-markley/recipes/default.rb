@@ -54,7 +54,7 @@ end
 
 # Configure the manager on the chef server
 execute "Add manager to the chef server" do
-  command "chef-manage-ctl reconfigure --accept-license"
+  command "chef-server-ctl reconfigure --accept-license"
   user 'root'
   group 'root'
   action :run
