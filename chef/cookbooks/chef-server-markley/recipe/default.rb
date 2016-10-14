@@ -1,3 +1,5 @@
+## See https://docs.chef.io/install_server.html for more info
+
 execute "Download and install chef" do
   command "curl -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -P chef-server"
   user 'root'
@@ -25,7 +27,7 @@ end
 
 # Create a chef organization
 execute "create a chef org" do
-  command "chef-server-ctl org-create #{node['my-chef-server']['short_org']} '#{node['my-chef-server']['full_org']}' --association_user #{node['my-chef-server']['user_name']} --filename #{node['my-chef-server']['validator_key']}"
+  command "chef-server-ctl org-create #{node['my-chef-server']['chef_short_org']} '#{node['my-chef-server']['chef_full_org']}' --association_user #{node['my-chef-server']['user_name']} --filename #{node['my-chef-server']['chef_validator_key']}"
   user 'root'
   group 'root'
   action :run

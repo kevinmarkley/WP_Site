@@ -1,0 +1,8 @@
+{
+  "run_list": ["chef-server-markley"],
+  "cloud": {
+    "WPAdmin": "WPAdmin",
+    "WPAdminPass": "WPpassAD",
+    "region_from_template": "us-west-1"
+  }
+}
