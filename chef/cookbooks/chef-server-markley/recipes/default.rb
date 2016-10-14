@@ -18,7 +18,7 @@ end
 
 # Create an admin account
 execute "create admin account" do
-  command "chef-server-ctl user-create #{node['chef-server-markley']['chef_user_name']} #{node['chef-server-markley']['chef_admin_first_name']} #{node['chef-server-markley']['chef_admin_last_name']} #{node['chef-server-markley']['chef_admin_email']} '#{node['chef-server-markley']['chef_admin_password']}' --filename #{node['chef-server-markley']['chef_sprivate_key']}"
+  command "chef-server-ctl user-create #{node['chef-server-markley']['chef_user_name']} #{node['chef-server-markley']['chef_admin_first_name']} #{node['chef-server-markley']['chef_admin_last_name']} #{node['chef-server-markley']['chef_admin_email']} '#{node['chef-server-markley']['chef_admin_password']}' --filename #{node['chef-server-markley']['chef_private_key']}"
   user 'root'
   group 'root'
   action :run
@@ -36,11 +36,11 @@ end
 
 # Create a chef organization
 execute "create a chef org" do
-  command "chef-server-ctl org-create #{node['chef-server-markley']['short_org']} '#{node['chef-server-markley']['full_org']}' --association_user #{node['chef-server-markley']['user_name']} --filename #{node['chef-server-markley']['validator_key']}"
+  command "chef-server-ctl org-create #{node['chef-server-markley']['chef_short_org']} '#{node['chef-server-markley']['chef_full_org']}' --association_user #{node['chef-server-markley']['chef_user_name']} --filename #{node['chef-server-markley']['chef_validator_key']}"
   user 'root'
   group 'root'
   action :run
-  not_if "chef-server-ctl org-list | grep #{node['chef-server-markley']['short_org']}"
+  not_if "chef-server-ctl org-list | grep #{node['chef-server-markley']['chef_short_org']}"
 end
 
 # Run the reconfigure again on the chef server to install license and certs
