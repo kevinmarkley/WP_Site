@@ -27,20 +27,20 @@ end
 
 # Create a chef organization
 execute "create a chef org" do
-  command "chef-server-ctl org-create #{node['my-chef-server']['chef_short_org']} '#{node['my-chef-server']['chef_full_org']}' --association_user #{node['my-chef-server']['user_name']} --filename #{node['my-chef-server']['chef_validator_key']}"
+  command "chef-server-ctl org-create #{node['chef-server-markley']['chef_short_org']} '#{node['chef-server-markley']['chef_full_org']}' --association_user #{node['chef-server-markley']['chef_user_name']} --filename #{node['chef-server-markley']['chef_validator_key']}"
   user 'root'
   group 'root'
   action :run
-  not_if "chef-server-ctl org-list | grep #{node['my-chef-server']['short_org']}"
+  not_if "chef-server-ctl org-list | grep #{node['chef-server-markley']['short_org']}"
 end
 
-# Add the manager to the chef server
-execute "Add manager to the chef server" do
-  command "chef-server-ctl install chef-manage"
+# Create a chef organization
+execute "create a chef org" do
+  command "chef-server-ctl org-create #{node['chef-server-markley']['short_org']} '#{node['chef-server-markley']['full_org']}' --association_user #{node['chef-server-markley']['user_name']} --filename #{node['chef-server-markley']['validator_key']}"
   user 'root'
   group 'root'
   action :run
-  not_if "rpm -qa | grep chef-manage"
+  not_if "chef-server-ctl org-list | grep #{node['chef-server-markley']['short_org']}"
 end
 
 # Run the reconfigure again on the chef server to install license and certs

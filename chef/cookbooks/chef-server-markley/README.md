@@ -21,19 +21,19 @@ e.g.
 chef-server::default
 
 Key	Type	Description	Default
-['my-chef-server']['bacon']	Boolean	whether to include bacon	true
+['chef-server-markley']['bacon']	Boolean	whether to include bacon	true
 Usage
 
-my-chef-server::default
+chef-server-markley::default
 
 TODO: Write usage instructions for each cookbook.
 
-e.g. Just include my-chef-server in your node's run_list:
+e.g. Just include chef-server-markley in your node's run_list:
 
 {
   "name":"my_node",
   "run_list": [
-    "recipe[chef-server-markleu]"
+    "recipe[chef-server-markley]"
   ]
 }
 Contributing
