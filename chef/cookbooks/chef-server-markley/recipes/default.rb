@@ -54,7 +54,7 @@ end
 
 # Copy cert files to /tmp
 %w{markley-chef.pem markley-validator.pem}.each do |cert|
-  execute "cp /root/#{cert} /tmp/#{cert}" do
+  execute "cp /etc/chef/#{cert} /tmp/#{cert}" do
     user 'root'
     group 'root'
     action :run
