@@ -53,7 +53,7 @@ execute "Add manager to the chef server" do
 end
 
 # Copy cert files to /tmp
-%w{markley-chef.pem markley-validator.pem}.each do |cert|
+%w{kmarkley-chef.pem kmarkley-validator.pem}.each do |cert|
   execute "cp /etc/chef/#{cert} /tmp/#{cert}" do
     user 'root'
     group 'root'
