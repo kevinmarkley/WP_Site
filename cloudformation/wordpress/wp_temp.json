@@ -490,7 +490,7 @@
               },
               "\n",
               "# Chef install/update.\n",
-              "cat <<'EOF' >> /root/chef-check.sh\n",
+              "cat <<'EOF' >> /root/1-chef-check.sh\n",
               "#!/bin/bash\n",
               "VERSION=\"12.10.24\"\n",
               "if rpm -qa | grep chef | grep $VERSION; then\n",
@@ -501,56 +501,57 @@
               "   curl -L \"http://www.opscode.com/chef/download?p=el&pv=6&m=x86_64&v=$VERSION\" -o chef-install && rpm -Uvh chef-install\n",
               "fi\n",
               "EOF\n",
+              "chmod 755 /root/1-chef-check.sh\n",
+              "/root/1-chef-check.sh > /tmp/chef_install.log 2>&1 || error_exit 'Failed to install chef.'\n",
+
 
               "# Clone github repo\n",
-              "cat <<'EOF' >> /root/git-setup.sh\n",
+              "cat <<'EOF' >> /root/2-git-setup.sh\n",
               "#!/bin/bash\n",
               "cd /\n",
-              "svn export https://github.com/tbojorqu/wordpress/trunk/chef/cookbooks/\n",
+              "git clone https://github.com/kevinmarkley/WP_Site.git\n",
               "EOF\n",
+              "chmod 755 /root/2-git-setup.sh\n",
+              "/root/2-git-setup.sh > /tmp/git-setup.log 2>&1 || error_exit 'Failed to setup git.'\n",
+
+
               "# Create key file\n",
               "cat > /root/.ssh/key.pem << EOF\n",
               "-----BEGIN RSA PRIVATE KEY-----\n",
-              "MIIEowIBAAKCAQEAuE1aJZQjXkuIz034/62XonrryWW7T1xjMZwyKrkwbwk9W/ao\n",
-              "dj06d8lWVENURFuA/Mx71hUKn7uv9zbndFMrPi2RnPE+svH+79HQS1sBzOLAcSuZ\n",
-              "woNUDBs3UuTNk/YSCBMgtVmRo5FZEzmUy5Qv0VPXCZpx5nsaAzQNGy2pSh9nFr+5\n",
-              "bsUUBHl8BONwagwr0f1nD+ResVbSbQqmuhHK0pplHCQ/Czz2AoilASOna/R8Cl7M\n",
-              "rp4/iUaP9LdqMh6hdgc9l9yaeGxJN6qZwq4ZVMMnFwoQBjVW1cKndC1XaplfwmKM\n",
-              "NbJguUNIE6Yx9NrwFkcysO6esLTW5NmUy961SQIDAQABAoIBAQCH5Kk6mi82ARYA\n",
-              "XSrjQ1lSebZPys5BJwsQ8m3fKKt4w+RVYds3S9BHsNIR0Y9Z0+qY/CG3ac5qlxaZ\n",
-              "fwdMs2JoN2ttwEgN4/epVxhx58m9C9j/2TlHvlQDlTHG0mRu2/rRr2DntwJ3C94V\n",
-              "GdkH/tz/SQV+1D11x4EXqZKcXp+7wYhnmSNjOrf2vlSSgwOfpUcGFWmmTFF7Eo7G\n",
-              "cNBRJpqzn/3CxmAh1+Edq6yPMigoHRmpl2R5v8gYYD+bYtPVXDg9agz8RG0mnrxl\n",
-              "vL27sW7K9ez5y1FYG2lr2hNHnwwp1IH+3MrP9eqNszmsLXiU+yOCBgjOuIWvSq8H\n",
-              "jLImWIu9AoGBAOxXLj/VlEddPfeGo9p91v6Klk4ZAAZURegHM/VkCKhExobU/85u\n",
-              "90VckbU95tAv826omhDtHX/lwuqQGKKw+t1YqFM2o8+0jmaRDvNao2SB+l4YKYRH\n",
-              "81VZH90wH9ZUtLxq2B6VJ8d2SkSZytdDjAP8PsK9PM+LzoqveIo4wblXAoGBAMei\n",
-              "BocD9wLiGUr3aJrZ8RvSNdiq/11R8i8/HAT985W0CUBBJ72nS/EHNGeF1W2Xgnh4\n",
-              "jw/uFj1N5CjMeqHOHWJtaBmAQOUx6+MVLNzDfq+bviyZTvGOoK2MiBgox05GrQov\n",
-              "FrfKa8jdA8AAp9n47d25EQqpWFmt+E2FZuxfUcJfAoGABd/g4WtQpTl3Gdj556tr\n",
-              "FaaiN8y9SGr91def/gB/ipczDBTtStdNRCcZ5BRm0VPvzBdaxQLv0ccHQkdUpW6a\n",
-              "vbe/b1oTVk1ZoMkIQxpEp3HnpEEbfxM+xCdT+G6CzBQM7gYF2zS/6WBSVkQwW4tt\n",
-              "RogVk0ea5FnIR4A3EdB5WD8CgYBehIscn7byyYP6J3uCXY+3gWZ3KDbxwxusXO/y\n",
-              "OR58EZqTroWXWL8u5h9cqFPtqF9glIv/mdUzv044NuAU/daRxIUWFdAj8+fgQyVT\n",
-              "fMfdcxquWQO0gLf4k2HYNm5u1C2XdcYGzLMNjf75iBXwsNhGMxordxRamXDHm1Ko\n",
-              "tVSrdwKBgGaWPmx9oFzh9Vr6LTwwnxZTyqjK4KD1hvnOVP1JFZPVQPp5JwIUjhwK\n",
-              "DUZ0FSoj4ZdMmk7UtemRpEmiAVkzVP7+sSB+eIVHe51SLzKFEfMfv2cCbTOU3W2I\n",
-              "SrPL2Ia5hwJzFJrNoMQKWMm10Pz60QH79I9NaNzNRd/Ruxj7i9ld\n",
+              "MIIEogIBAAKCAQEAj91RIbNzza99pRTYJGjyLt1y9sLsittYh04FQv/6qqiOcz9KbDJ2wLQzHglX\n",
+              "CtZPnkxKVGJyTUQb/71lbh9ApbH8DY9nT7vFTPKRMqw8/9gd6jS6lOcB/IAtYl65VrXqQYqsPDrD\n",
+              "EUarYwLQHNEHG0NwX7iGT+lHWaxAdx9flMfd7g/hb20yBDDqIdPUTHcgJcbCRodXgbv51pbuvFOK\n",
+              "UA+46JJMieYqP4TK42CIDAsZXRw++u6J6WMrjKtjdb0gvyePgQQHLour0/F06I1Rs399HYaHZoEw\n",
+              "lfhYD5+caagXxhfu2CQbxBgTDsJFj3MgxQyOitMHlwBMXVzWdorKIwIDAQABAoIBABrypePeLW71\n",
+              "1F87zFDlp5fHu2UllhFcjPSrVKj8MgQNlsFXtaUWvs/R8VFLBpbtFfTc7X9pAWgfve7llz5NdFqV\n",
+              "QFV56ywwTADh3vjS8oop/VCFl/2UV/boO5gVjjoD0WF9jE2r5CY0Sp49RKZhMSeWNlJ3yhDl7YuK\n",
+              "jHjD06+Wh8jAahDCLFgVQVaYkuesQF5ipHTm5PzfAX8zsGQsTsABSdpe0OkBApAAiuyo9hCC23s/\n",
+              "EYTveejmdXKWTqETlCb0m86XZ2+bXEbEF5MHvDc0XBYyIly/sb4iVbPkJjWjVKLTEW06Pyx7iTDh\n",
+              "PcQUSmuiUVHYoaNKwx4hWzNiO0ECgYEA4jnP/CNYI5OHpX91rfr/YsOKZGYABF8fh0hsx23v9pU0\n",
+              "of8Z2FlsH55JfFe5MLQ0tSDuDzYOHIlkUu8RrIVxVlvoQ/SCLx+xe49x9IPt+if+A1J67dtZpq9J\n",
+              "aM21V8STrkqKp0QxWJx1MWny1C7BY+Xy585j9hsmlh1I7f6jI2kCgYEAosyE54ZiW+Kn52EuUlsp\n",
+              "VDniOC7eXtFy24dMx3cqCxcHQrY9aUQKBkVpH7mIwSpwyt/0MoWLSOo0xD2YWsc1vlK3GsSUEc06\n",
+              "3mSwQBk618aNKynCGYZwuZOEZX5E0BO9MjeTMmJoHlqL0vRA/6fjO+ntwVeLcKli9mCu3XEzq6sC\n",
+              "gYA+IWCUv+RCCQ+VDVd1i9y99DQ69KSGjtVq4yI092WTFFFbOGORvqVqXZ+TDcinrqZXJI8dEFx5\n",
+              "y+YIvO3estt4u08j8rAaXxrwc2n5nI4sSPWDVhC66KZLmBKSPQTT8QIaORCxdZIT4wxwoMd3LMwi\n",
+              "MpIuxclAWx6S1cIk0u1dGQKBgCdzvLmG3Ys68EmoSVt38BoTNPk8knMT+uusbDTicfPiDsZh95vs\n",
+              "+yjt5T3k7nkxWcgwYbNknY58A3GTI7rMEAAhd3IrNV7jB2Mhr3y5IINuAIP3SKx64hJ251zZLr/m\n",
+              "KLFkum05X9YLR1tGCgJqoyy/0fhKyOXyhqMCZx4O8uClAoGABkEE/fRQT4D5roS296jY7MbdTxxA\n",
+              "KTTwhOgrB8CRPLXNeiRzUfRY/M7rXeks7X+xpax9OOcNnAfhIGL7wDFw4TOjLIuUQXdNVtQ5lldm\n",
+              "T15MNKAHB8IV6uPHHmO0eYeJAAjvz2l3Wk61RJi14r3rBF1G/PugOOdt9P5IKJnOuQ4=\n",
               "-----END RSA PRIVATE KEY-----\n",
               "EOF\n",
               "chmod 600 /root/.ssh/key.pem\n",
-              "CHEF_SERVER=\"",
-              {
-                "Fn::GetAtt": [
-                  "ChefRun",
-                  "PrivateIp"
-                ]
-              },
-              "\"\n",
+
+              "CHEF_SERVER=\"", {"Fn::GetAtt": [ "ChefRun", "PrivateIp" ]}, "\"\n",
+
               "WP_SERVER=`curl -s http://169.254.169.254/latest/meta-data/public-ipv4`\n",
+
               "mkdir -p /etc/chef\n",
+
               "# Get chef certs\n",
               "scp -o StrictHostKeyChecking=no -i /root/.ssh/key.pem ec2-user@$CHEF_SERVER:/tmp/markley-validator.pem /etc/chef\n",
+
               "cat > /etc/chef/client.rb << EOF\n",
               "current_dir = File.dirname(__FILE__)\n",
               "log_level       :info\n",
@@ -558,67 +559,38 @@
               "ssl_verify_mode :verify_none\n",
               "node_name \"wordpress\"\n",
               "validation_client_name  'markley-validator'\n",
-              "validation_key          \"#{current_dir}/markley-validator.pem\"\n",
-              "chef_server_url         \"https://$CHEF_SERVER/organizations/markley\"\n",
-              "cookbook_path            [\"/cookbooks\"]\n",
+              "validation_key          \"/etc/chef/markley-validator.pem\"\n",
+              "chef_server_url         \"https://$CHEF_SERVER/organizations/kmarkley\"\n",
+              "cookbook_path            [\"/etc/chef/WP_Site/chef/cookbooks\"]\n",
               "EOF\n",
+
               "# Node attributes to be seeded during first run\n",
               "cat > /etc/chef/roles.json << EOF\n",
               "{\n",
-              "  \"run_list\": [\"wordpress-markley\"",
-              "],\n",
-              "  \"cloud\": {\n",
-              "    \"chef_server\": \"",
-              {
-                "Fn::GetAtt": [
-                  "ChefRun",
-                  "PrivateIp"
-                ]
-              },
-              "\", \n",
-              "    \"WPUser\": \"",
-              {
-                "Ref": "WPAdmin"
-              },
-              "\", \n",
-              "    \"WP_admin_Pass\": \"",
-              {
-                "Ref": "WPAdminPass"
-              },
-              "\", \n",
-              "    \"wp_email\": \"",
-              {
-                "Ref": "WPAdminEmail"
-              },
-              "\", \n",
-              "    \"wp_server\": \"$WP_SERVER\", \n",
-              "    \"region_from_template\": \"",
-              {
-                "Ref": "AWS::Region"
-              },
-              "\" \n",
+              "   \"run_list\": [\"wordpress-markley\"", "],\n",
+              "   \"cloud\": {\n",
+              "    \"WPAdmin\": \"", {"Ref" : "WPAdmin"} , "\", \n",
+              "    \"WPAdminPass\": \"", {"Ref" : "WPAdminPass"} , "\", \n",
+              "    \"WPAdminEmail\": \"", {"Ref" : "WPAdminEmail"} , "\", \n",
+              "    \"WPServer\": \"$WP_SERVER\", \n",
+              "    \"region_from_template\": \"", {"Ref" : "AWS::Region"} , "\" \n",
               "  } \n",
               "}\n",
               "EOF\n",
+
               "# Run chef-client to install wordpress\n",
-              "cat <<'EOF' >> /root/run-chef.sh\n",
+              "cat <<'EOF' >> /root/3-run-chef.sh\n",
               "#!/bin/bash\n",
               "cd /root\n",
               "chef-client -j /etc/chef/roles.json -N wordpress\n",
               "EOF\n",
-              "chmod 755 /root/run-chef.sh\n",
-              "/root/run-chef.sh > /var/log/chef-client.log 2>&1 || error_exit 'Failed to initialize wordpress via chef client'\n",
+              "chmod 755 /root/3-run-chef.sh\n",
+              "/root/3-run-chef.sh > /var/log/chef-client.log 2>&1 || error_exit 'Failed to initialize wordpress via chef client'\n",
+
               "/opt/aws/bin/cfn-signal -e $? ",
-              "         --stack ",
-              {
-                "Ref": "AWS::StackName"
-              },
-              "         --resource WordpressRun ",
-              "         --region ",
-              {
-                "Ref": "AWS::Region"
-              },
-              "\n"
+              "         --stack ", { "Ref" : "AWS::StackName" },
+              "         --resource WordpressInstance ",
+              "         --region ", { "Ref" : "AWS::Region" }, "\n"
             ]
           ]
         }
