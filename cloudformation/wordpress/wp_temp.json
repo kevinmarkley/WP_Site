@@ -300,7 +300,7 @@
         "VpcId" : { "Ref" : "VPC" },
         "GroupDescription" : "Enable SSH access via port 22",
         "SecurityGroupIngress" : [
-          {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "24.7.110.118/32"},
+          {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "73.170.14.149/32"},
           {"IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : { "Ref" : "AllowHTTP"}}],
         "SecurityGroupEgress" : []
       }
@@ -384,13 +384,13 @@
 
         "mkdir -p /root/.chef\n",
 
-        "cat > /etc/chef/client.rb << EOF\n",
+        "cat > /root/.chef/knife.rb << EOF\n",
         "current_dir = File.dirname(__FILE__)\n",
         "log_level       :info\n",
         "log_location     \"/var/log/chef-client.log\"\n",
         "ssl_verify_mode :verify_none\n",
         "node_name 'kmarkley'\n",
-        "client_key \"/root/markley_chef.pem\"\n",
+        "client_key \"/root/markley-chef.pem\"\n",
         "validation_client_name  'markley-validator'\n",
         "validation_key          \"/root/markley-validator.pem\"\n",
         "chef_server_url         \"https://$CHEF_SERVER/organizations/kmarkley\"\n",
