@@ -31,6 +31,15 @@ execute "create a chef org" do
   user 'root'
   group 'root'
   action :run
+  not_if "chef-server-ctl org-list | grep #{node['chef-server-markley']['short_org']}"
+end
+
+# Create a chef organization
+execute "create a chef org" do
+  command "chef-server-ctl org-create #{node['chef-server-markley']['chef_short_org']} '#{node['chef-server-markley']['chef_full_org']}' --association_user #{node['chef-server-markley']['chef_user_name']} --filename #{node['chef-server-markley']['chef_validator_key']}"
+  user 'root'
+  group 'root'
+  action :run
   not_if "chef-server-ctl org-list | grep #{node['chef-server-markley']['chef_short_org']}"
 end
 
@@ -54,7 +63,7 @@ end
 
 # Copy cert files to /tmp
 %w{kmarkley-chef.pem kmarkley-validator.pem}.each do |cert|
-  execute "cp /etc/chef/#{cert} /tmp/#{cert}" do
+  execute "cp /root/#{cert} /tmp/#{cert}" do
     user 'root'
     group 'root'
     action :run
