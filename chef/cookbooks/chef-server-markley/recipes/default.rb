@@ -72,7 +72,7 @@ end
 end
 
 # Upload cookbooks
-%w{chef_handler windows 7-zip build-essential chef-sugar xml yum yum-epel iis yum-mysql-community rbac smf mysql php openssl apache2 apt postgresql database mariadb mysql2_chef_gem tar compat_resource rsyslog bluepill ohai packagecloud runit nginx php-fpm selinux wordpress my-wordpress}.each do |cookbook|
+%w{chef_handler windows 7-zip build-essential chef-sugar xml yum yum-epel iis yum-mysql-community rbac smf mysql php openssl apache2 apt postgresql database mariadb mysql2_chef_gem tar compat_resource rsyslog bluepill ohai packagecloud runit nginx php-fpm selinux wordpress wordpress-markley}.each do |cookbook|
   execute "knife cookbook upload #{cookbook}" do
     cwd '/cookbooks'
     user 'root'
