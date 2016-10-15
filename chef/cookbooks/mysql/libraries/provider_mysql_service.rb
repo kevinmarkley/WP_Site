@@ -3,15 +3,14 @@ require_relative 'helpers'
 
 class Chef
   class Provider
-    class MysqlServiceBase < Chef::Provider::LWRPBase
-      use_inline_resources
+    class MysqlService < Chef::Provider::LWRPBase
+      include MysqlCookbook::Helpers
+
+      use_inline_resources if defined?(use_inline_resources)
 
       def whyrun_supported?
         true
       end
-
-      # Mix in helpers from libraries/helpers.rb
-      include MysqlCookbook::Helpers
 
       # Service related methods referred to in the :create and :delete
       # actions need to be implemented in the init system subclasses.
@@ -28,30 +27,17 @@ class Chef
         configure_package_repositories
 
         # Software installation
-        package "#{new_resource.name} :create #{server_package_name}" do
-          package_name server_package_name
-          version parsed_version if node['platform'] == 'smartos'
+        package "#{new_resource.name} :create #{new_resource.server_package_name}" do
+          package_name new_resource.server_package_name
+          version new_resource.version if node['platform'] == 'smartos'
           version new_resource.package_version
           action new_resource.package_action
-          notifies :install, 'package[perl-Sys-Hostname-Long]', :immediately if platform_family?('suse')
-          notifies :run, 'execute[Initial DB setup script]', :immediately if platform_family?('suse')
-        end
-
-        # hostname perl module needed by suse
-        package 'perl-Sys-Hostname-Long' do
-          action :nothing
-        end
-
-        execute 'Initial DB setup script' do
-          environment 'INSTANCE' => new_resource.name
-          command '/usr/lib/mysql/mysql-systemd-helper install '
-          action :nothing
         end
 
         create_stop_system_service
 
         # Apparmor
-        configure_apparmor
+        configure_apparmor if node['platform'] == 'ubuntu'
 
         # System users
         group "#{new_resource.name} :create mysql" do
@@ -124,8 +110,8 @@ class Chef
           action :create
         end
 
-        directory "#{new_resource.name} :create #{parsed_data_dir}" do
-          path parsed_data_dir
+        directory "#{new_resource.name} :create #{new_resource.parsed_data_dir}" do
+          path new_resource.parsed_data_dir
           owner new_resource.run_user
           group new_resource.run_group
           mode '0750'
@@ -148,19 +134,24 @@ class Chef
             lc_messages_dir: lc_messages_dir,
             pid_file: pid_file,
             socket_file: socket_file,
-            tmp_dir: tmp_dir,
-            data_dir: parsed_data_dir
-          )
+            tmp_dir: tmp_dir
+            )
           action :create
         end
 
-        # initialize database and create initial records
+        # initialize mysql database
+        bash "#{new_resource.name} :create initialize mysql database" do
+          cwd prefix_dir
+          code mysql_install_db_script
+          not_if "/usr/bin/test -f #{new_resource.parsed_data_dir}/mysql/user.frm"
+          notifies :run, "bash[#{new_resource.name} :create initial records]"
+          action :run
+        end
+
+        # create initial records
         bash "#{new_resource.name} :create initial records" do
           code init_records_script
-          umask '022'
-          returns [0, 1, 2] # facepalm
-          not_if "/usr/bin/test -f #{parsed_data_dir}/mysql/user.frm"
-          action :run
+          action :nothing
         end
       end
 
@@ -191,72 +182,65 @@ class Chef
       # Platform specific bits
       #
       def configure_apparmor
-        # Do not add these resource if inside a container
-        # Only valid on Ubuntu
+        # Apparmor
+        package "#{new_resource.name} :create apparmor" do
+          package_name 'apparmor'
+          action :install
+        end
 
-        unless ::File.exist?('/.dockerenv') || ::File.exist?('/.dockerinit')
-          if node['platform'] == 'ubuntu'
-            # Apparmor
-            package "#{new_resource.name} :create apparmor" do
-              package_name 'apparmor'
-              action :install
-            end
+        directory "#{new_resource.name} :create /etc/apparmor.d/local/mysql" do
+          path '/etc/apparmor.d/local/mysql'
+          owner 'root'
+          group 'root'
+          mode '0755'
+          recursive true
+          action :create
+        end
 
-            directory "#{new_resource.name} :create /etc/apparmor.d/local/mysql" do
-              path '/etc/apparmor.d/local/mysql'
-              owner 'root'
-              group 'root'
-              mode '0755'
-              recursive true
-              action :create
-            end
+        template "#{new_resource.name} :create /etc/apparmor.d/local/usr.sbin.mysqld" do
+          path '/etc/apparmor.d/local/usr.sbin.mysqld'
+          cookbook 'mysql'
+          source 'apparmor/usr.sbin.mysqld-local.erb'
+          owner 'root'
+          group 'root'
+          mode '0644'
+          action :create
+          notifies :restart, "service[#{new_resource.name} :create apparmor]", :immediately
+        end
 
-            template "#{new_resource.name} :create /etc/apparmor.d/local/usr.sbin.mysqld" do
-              path '/etc/apparmor.d/local/usr.sbin.mysqld'
-              cookbook 'mysql'
-              source 'apparmor/usr.sbin.mysqld-local.erb'
-              owner 'root'
-              group 'root'
-              mode '0644'
-              action :create
-              notifies :restart, "service[#{new_resource.name} :create apparmor]", :immediately
-            end
+        template "#{new_resource.name} :create /etc/apparmor.d/usr.sbin.mysqld" do
+          path '/etc/apparmor.d/usr.sbin.mysqld'
+          cookbook 'mysql'
+          source 'apparmor/usr.sbin.mysqld.erb'
+          owner 'root'
+          group 'root'
+          mode '0644'
+          action :create
+          notifies :restart, "service[#{new_resource.name} :create apparmor]", :immediately
+        end
 
-            template "#{new_resource.name} :create /etc/apparmor.d/usr.sbin.mysqld" do
-              path '/etc/apparmor.d/usr.sbin.mysqld'
-              cookbook 'mysql'
-              source 'apparmor/usr.sbin.mysqld.erb'
-              owner 'root'
-              group 'root'
-              mode '0644'
-              action :create
-              notifies :restart, "service[#{new_resource.name} :create apparmor]", :immediately
-            end
+        template "#{new_resource.name} :create /etc/apparmor.d/local/mysql/#{new_resource.instance}" do
+          path "/etc/apparmor.d/local/mysql/#{new_resource.instance}"
+          cookbook 'mysql'
+          source 'apparmor/usr.sbin.mysqld-instance.erb'
+          owner 'root'
+          group 'root'
+          mode '0644'
+          variables(
+            data_dir: new_resource.parsed_data_dir,
+            mysql_name: mysql_name,
+            log_dir: log_dir,
+            run_dir: run_dir,
+            pid_file: pid_file,
+            socket_file: socket_file
+            )
+          action :create
+          notifies :restart, "service[#{new_resource.name} :create apparmor]", :immediately
+        end
 
-            template "#{new_resource.name} :create /etc/apparmor.d/local/mysql/#{new_resource.instance}" do
-              path "/etc/apparmor.d/local/mysql/#{new_resource.instance}"
-              cookbook 'mysql'
-              source 'apparmor/usr.sbin.mysqld-instance.erb'
-              owner 'root'
-              group 'root'
-              mode '0644'
-              variables(
-                data_dir: parsed_data_dir,
-                mysql_name: mysql_name,
-                log_dir: log_dir,
-                run_dir: run_dir,
-                pid_file: pid_file,
-                socket_file: socket_file
-              )
-              action :create
-              notifies :restart, "service[#{new_resource.name} :create apparmor]", :immediately
-            end
-
-            service "#{new_resource.name} :create apparmor" do
-              service_name 'apparmor'
-              action :nothing
-            end
-          end
+        service "#{new_resource.name} :create apparmor" do
+          service_name 'apparmor'
+          action :nothing
         end
       end
     end
