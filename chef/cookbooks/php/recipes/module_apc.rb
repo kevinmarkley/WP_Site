@@ -4,7 +4,7 @@
 # Cookbook Name:: php
 # Recipe:: module_apc
 #
-# Copyright 2009-2016, Chef Software, Inc.
+# Copyright 2009-2015, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ when 'rhel', 'fedora'
     directives(shm_size: '128M', enable_cli: 0)
   end
 when 'debian'
-  package node['php']['apc']['package'] do
+  package 'php-apc' do
     action :install
   end
 end

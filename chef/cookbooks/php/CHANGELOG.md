@@ -2,33 +2,6 @@
 
 This file is used to list changes made in each version of the php cookbook.
 
-## 2.1.1 (2016-09-15)
-
-- Fix recompile un-pack php creates
-- Resolve cookstyle warnings
-
-## 2.1.0 (2016-09-14)
-
-- Fix source php version check
-- Require Chef 12.1 not 12.0
-
-## 2.0.0 (2016-09-07)
-
-- Require Chef 12+
-- Remove the dependency on the Windows cookbook which isn't necessary with Chef 12+
-
-## 1.10.1 (2016-08-30)
-
-- [fix] bug fixes related with Ubuntu 16.04 and PHP 7 support
-- adding validator to listen attribute
-- Fix node.foo.bar warnings
-
-## v1.10.0 (2016-07-27)
-
-- PR #167 Preventing user specified pool of www from being deleted at the end of the chef run on the first install
-- PR #122 Add recipe for php module_imap
-- PR #172 Fix uninstall action for resource php_fpm_pool
-
 ## v1.9.0 (2016-05-12)
 
 Special thanks to @ThatGerber for getting the PR for this release together

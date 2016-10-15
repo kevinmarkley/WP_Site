@@ -1,9 +1,9 @@
 #
-# Author:: Sean OMeara (<someara@chef.io>)
+# Author:: Sean OMeara (<someara@opscode.com>)
 # Cookbook Name:: selinux
 # Recipe:: disabled
 #
-# Copyright 2011, Chef Software, Inc.
+# Copyright 2011, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

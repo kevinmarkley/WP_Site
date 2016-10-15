@@ -32,7 +32,7 @@ class Chef
         set_or_return(
           :password,
           arg,
-          kind_of: [String, HashedPassword]
+          kind_of: [String, MysqlPassword]
         )
       end
     end

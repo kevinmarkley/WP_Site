@@ -11,13 +11,14 @@ It installs and configures PHP and the PEAR package management system.  Also inc
 - Microsoft Windows
 
 ### Chef
-- Chef 12.1+
+- Chef 11+
 
 ### Cookbooks
 - build-essential
 - xml
 - mysql
 - iis
+- windows
 
 ## Attributes
 - `node['php']['install_method']` = method to install php with, default `package`.
@@ -195,12 +196,10 @@ This recipe installs PHP from source.
 ## Deprecated Recipes
 The following recipes are deprecated and will be removed from a future version of this cookbook.
 - `module_apc`
-- `module_apcu`
 - `module_curl`
 - `module_fileinfo`
 - `module_fpdf`
 - `module_gd`
-- `module_imap`
 - `module_ldap`
 - `module_memcache`
 - `module_mysql`
@@ -276,7 +275,7 @@ This section details "quick development" steps. For a detailed explanation, see 
 ## License & Authors
 **Author:** Cookbook Engineering Team ([cookbooks@chef.io](mailto:cookbooks@chef.io))
 
-**Copyright:** 2008-2016, Chef Software, Inc.
+**Copyright:** 2008-2015, Chef Software, Inc.
 
 ```
 Licensed under the Apache License, Version 2.0 (the "License");

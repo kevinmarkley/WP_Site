@@ -36,15 +36,6 @@ default['php']['disable_mod'] = '/usr/sbin/php5dismod'
 default['php']['ini']['template'] = 'php.ini.erb'
 default['php']['ini']['cookbook'] = 'php'
 
-default['php']['fpm_socket']        = '/var/run/php5-fpm.sock'
-default['php']['curl']['package']   = 'php5-curl'
-default['php']['apc']['package']    = 'php5-apc'
-default['php']['apcu']['package']   = 'php5-apcu'
-default['php']['gd']['package']     = 'php5-gd'
-default['php']['ldap']['package']   = 'php5-ldap'
-default['php']['pgsql']['package']  = 'php5-pgsql'
-default['php']['sqlite']['package'] = 'php5-sqlite3'
-
 case node['platform_family']
 when 'rhel', 'fedora'
   lib_dir = node['kernel']['machine'] =~ /x86_64/ ? 'lib64' : 'lib'
@@ -102,17 +93,9 @@ when 'debian'
       default['php']['src_deps']         = %w(libbz2-dev libc-client2007e-dev libcurl4-gnutls-dev libfreetype6-dev libgmp3-dev libjpeg62-dev libkrb5-dev libmcrypt-dev libpng12-dev libssl-dev pkg-config)
       default['php']['packages']         = %w(php7.0-cgi php7.0 php7.0-dev php7.0-cli php-pear)
       default['php']['mysql']['package'] = 'php7.0-mysql'
-      default['php']['curl']['package']  = 'php7.0-curl'
-      default['php']['apc']['package']   = 'php-apc'
-      default['php']['apcu']['package']  = 'php-apcu'
-      default['php']['gd']['package']    = 'php7.0-gd'
-      default['php']['ldap']['package']  = 'php7.0-ldap'
-      default['php']['pgsql']['package'] = 'php7.0-pgsql'
-      default['php']['sqlite']['package'] = 'php7.0-sqlite3'
       default['php']['fpm_package']      = 'php7.0-fpm'
       default['php']['fpm_pooldir']      = '/etc/php/7.0/fpm/pool.d'
       default['php']['fpm_service']      = 'php7.0-fpm'
-      default['php']['fpm_socket']       = '/var/run/php/php7.0-fpm.sock'
       default['php']['fpm_default_conf'] = '/etc/php/7.0/fpm/pool.d/www.conf'
       default['php']['enable_mod']       = '/usr/sbin/phpenmod'
       default['php']['disable_mod']      = '/usr/sbin/phpdismod'
@@ -121,11 +104,6 @@ when 'debian'
       default['php']['ext_conf_dir'] = '/etc/php5/mods-available'
     when 10.04..12.10
       default['php']['ext_conf_dir'] = '/etc/php5/conf.d'
-    end
-  when 'debian'
-    case node['platform_version'].to_i
-    when 8
-      default['php']['ext_conf_dir'] = '/etc/php5/mods-available'
     end
   end
 when 'suse'
@@ -178,14 +156,14 @@ else
   default['php']['mysql']['package'] = 'php5-mysql'
 end
 
-default['php']['configure_options'] = %W(--prefix=#{node['php']['prefix_dir']}
+default['php']['configure_options'] = %W(--prefix=#{php['prefix_dir']}
                                          --with-libdir=#{lib_dir}
-                                         --with-config-file-path=#{node['php']['conf_dir']}
-                                         --with-config-file-scan-dir=#{node['php']['ext_conf_dir']}
+                                         --with-config-file-path=#{php['conf_dir']}
+                                         --with-config-file-scan-dir=#{php['ext_conf_dir']}
                                          --with-pear
                                          --enable-fpm
-                                         --with-fpm-user=#{node['php']['fpm_user']}
-                                         --with-fpm-group=#{node['php']['fpm_group']}
+                                         --with-fpm-user=#{php['fpm_user']}
+                                         --with-fpm-group=#{php['fpm_group']}
                                          --with-zlib
                                          --with-openssl
                                          --with-kerberos

@@ -180,26 +180,28 @@ class Chef
             action :run
           end
 
-          template "#{sv_dir_name}/check" do
-            owner new_resource.owner unless new_resource.owner.nil?
-            group new_resource.group unless new_resource.group.nil?
-            mode '00755'
-            cookbook template_cookbook
-            source "sv-#{new_resource.check_script_template_name}-check.erb"
-            variables(options: new_resource.options)
-            action :create
-            only_if { new_resource.check }
+          if new_resource.check
+            template "#{sv_dir_name}/check" do
+              owner new_resource.owner unless new_resource.owner.nil?
+              group new_resource.group unless new_resource.group.nil?
+              mode '00755'
+              cookbook template_cookbook
+              source "sv-#{new_resource.check_script_template_name}-check.erb"
+              variables(options: new_resource.options)
+              action :create
+            end
           end
 
-          template "#{sv_dir_name}/finish" do
-            owner new_resource.owner unless new_resource.owner.nil?
-            group new_resource.group unless new_resource.group.nil?
-            mode '00755'
-            source "sv-#{new_resource.finish_script_template_name}-finish.erb"
-            cookbook template_cookbook
-            variables(options: new_resource.options) if new_resource.options.respond_to?(:has_key?)
-            action :create
-            only_if { new_resource.finish }
+          if new_resource.finish
+            template "#{sv_dir_name}/finish" do
+              owner new_resource.owner unless new_resource.owner.nil?
+              group new_resource.group unless new_resource.group.nil?
+              mode '00755'
+              source "sv-#{new_resource.finish_script_template_name}-finish.erb"
+              cookbook template_cookbook
+              variables(options: new_resource.options) if new_resource.options.respond_to?(:has_key?)
+              action :create
+            end
           end
 
           directory "#{sv_dir_name}/control" do
@@ -281,7 +283,7 @@ class Chef
 
         directory new_resource.service_dir
 
-        link service_dir_name.to_s do
+        link "#{service_dir_name}" do
           to sv_dir_name
           action :create
         end
@@ -295,18 +297,18 @@ class Chef
 
         # Support supervisor owner and groups http://smarden.org/runit/faq.html#user
         if new_resource.supervisor_owner || new_resource.supervisor_group
-          directory "#{service_dir_name}/supervise" do
-            mode '0755'
-            action :create
-          end
-          %w(ok status control).each do |target|
-            file "#{service_dir_name}/supervise/#{target}" do
-              owner new_resource.supervisor_owner || 'root'
-              group new_resource.supervisor_group || 'root'
-              action :touch
-            end
-          end
-        end
+           directory "#{service_dir_name}/supervise" do
+             mode '0755'
+             action :create
+           end
+           %w(ok status control).each do |target|
+             file "#{service_dir_name}/supervise/#{target}" do
+               owner new_resource.supervisor_owner || 'root'
+               group new_resource.supervisor_group || 'root'
+               action :touch
+             end
+           end
+         end
       end
 
       # signals

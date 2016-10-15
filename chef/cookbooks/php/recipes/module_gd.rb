@@ -4,7 +4,7 @@
 # Cookbook Name:: php
 # Recipe:: module_gd
 #
-# Copyright 2009-2016, Chef Software, Inc.
+# Copyright 2009-2015, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ pkg = value_for_platform(
   'freebsd' => {
     'default' => 'php56-gd'
   },
-  'default' => node['php']['gd']['package']
+  'default' => 'php5-gd'
 )
 
 package pkg do

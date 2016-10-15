@@ -1,28 +1,3 @@
-# chef-ingredient Cookbook CHANGELOG
-This file is used to list changes made in each version of the chef-ingredient cookbook.
-
-## 0.21.0 (2016-09-26)
-- Update mixlib-install to version 2.0 (PackageRouter support)
-
-## 0.20.0 (2016-09-08)
-- Remove extraneous converge_by that caused downloads to show as converged on every run
-- Use compat_resource cookbook to add support for Chef 12.1-12.4
-- Use apt_update resource vs. the apt cookbook in the test cookbook
-- Update Travis CI testing to use our standard Rakefile and cookstyle for ruby linting.
-- Fix chefspec / foodcritic / test kitchen failures
-- Swap the Policyfile for a Berksfile
-- Remove unnecessary action and default_action properties from the custom resources
-
-# v0.19.0
-
-- Remove delivery-cli examples and tests (we now shipit with ChefDK)
-- Set version constraint to ~> 1.1 for installing mixlib-install from Rubygems
-
-# v0.18.5
-
-- [#106](https://github.com/chef-cookbooks/chef-ingredient/pull/106) Limit `remote_file` backups to 1
-- [#110](https://github.com/chef-cookbooks/chef-ingredient/pull/110) Get rid of default: nil warnings
-
 # v0.18.4
 
 - Add `platform_version_compatibility_mode` property to `chef_ingredient` which makes chef-ingredient select packages built for earlier version of a platform during install when a package does not exist for the current platform version.

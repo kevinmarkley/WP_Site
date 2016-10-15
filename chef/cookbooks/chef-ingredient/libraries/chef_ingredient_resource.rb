@@ -1,6 +1,6 @@
 #
 # Author:: Joshua Timberman <joshua@chef.io
-# Copyright (c) 2015-2016, Chef Software, Inc. <legal@chef.io>
+# Copyright (c) 2015, Chef Software, Inc. <legal@chef.io>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,21 +23,21 @@ class Chef
       default_action :install
 
       attribute :product_name, kind_of: String, name_attribute: true
-      attribute :config, kind_of: String
+      attribute :config, kind_of: String, default: nil
 
       # Attributes for determining what version to install from which channel
       attribute :version, kind_of: [String, Symbol], default: :latest
       attribute :channel, kind_of: Symbol, default: :stable, equal_to: [:current, :stable, :unstable]
 
       # Attribute to install package from local file
-      attribute :package_source, kind_of: String
+      attribute :package_source, kind_of: String, default: nil
 
       # Sets the *-ctl command to use when doing reconfigure
       attribute :ctl_command, kind_of: String
 
       # Attributes for package resources used on rhel and debian platforms
       attribute :options, kind_of: String
-      attribute :timeout, kind_of: [Integer, String, NilClass]
+      attribute :timeout, kind_of: [Integer, String, NilClass], default: nil
 
       # Attribute to accept the license when applicable
       attribute :accept_license, kind_of: [TrueClass, FalseClass], default: false

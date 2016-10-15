@@ -16,6 +16,8 @@ platforms:
     region: <%= ENV['DIGITALOCEAN_REGION'] %>
     ssh_key_ids: <%= ENV['DIGITALOCEAN_SSH_KEYS'] %>
     ssh_key: <%= ENV['DIGITALOCEAN_SSH_KEY_PATH'] %>
+  run_list:
+  - recipe[apt]
 
 - name: ubuntu-14.04
   driver_plugin: digital_ocean
@@ -25,6 +27,8 @@ platforms:
     region: <%= ENV['DIGITALOCEAN_REGION'] %>
     ssh_key_ids: <%= ENV['DIGITALOCEAN_SSH_KEYS'] %>
     ssh_key: <%= ENV['DIGITALOCEAN_SSH_KEY_PATH'] %>
+  run_list:
+  - recipe[apt]
 
 - name: centos-5.8
   driver_plugin: digital_ocean

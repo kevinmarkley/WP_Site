@@ -17,8 +17,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-use_inline_resources
+use_inline_resources if defined?(use_inline_resources)
 
 include Windows::Helper
 
@@ -71,13 +70,13 @@ def install_font
 end
 
 action :install do
-  if font_exists?
-    Chef::Log.debug("Not installing font: #{@new_resource.file}, font already installed.")
-    new_resource.updated_by_last_action(false)
-  else
+  unless font_exists?
     get_cookbook_font
     install_font
     del_cookbook_font
     new_resource.updated_by_last_action(true)
+  else
+    Chef::Log.debug("Not installing font: #{@new_resource.file}, font already installed.")
+    new_resource.updated_by_last_action(false)
   end
 end

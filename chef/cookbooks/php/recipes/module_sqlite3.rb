@@ -4,7 +4,7 @@
 # Cookbook Name:: php
 # Recipe:: module_sqlite3
 #
-# Copyright 2009-2016, Chef Software, Inc.
+# Copyright 2009-2015, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ case node['platform_family']
 when 'rhel', 'fedora'
   # already there in centos, --with-pdo-sqlite=shared
 when 'debian'
-  package node['php']['sqlite']['package'] do
+  package 'php5-sqlite' do
     action :install
   end
 end
