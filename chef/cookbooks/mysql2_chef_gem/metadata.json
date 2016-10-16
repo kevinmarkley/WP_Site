@@ -1,6 +1,6 @@
 {
   "name": "mysql2_chef_gem",
-  "version": "0.1.1",
+  "version": "1.0.1",
   "description": "Provides the mysql2_chef_gem resource",
   "long_description": "",
   "maintainer": "Nicolas Blanc",
@@ -13,8 +13,7 @@
     "scientific": ">= 0.0.0",
     "fedora": ">= 0.0.0",
     "debian": ">= 0.0.0",
-    "ubuntu": ">= 0.0.0",
-    "smartos": ">= 0.0.0"
+    "ubuntu": ">= 0.0.0"
   },
   "dependencies": {
     "build-essential": ">= 0.0.0",
