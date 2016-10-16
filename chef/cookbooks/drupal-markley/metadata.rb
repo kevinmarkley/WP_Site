@@ -1,4 +1,4 @@
-name             'wordpress-markley'
+name             'drupal-markley'
 maintainer       'Kevin Markley'
 maintainer_email 'kevinmarkley@gmail.com'
 license          'All rights reserved'
