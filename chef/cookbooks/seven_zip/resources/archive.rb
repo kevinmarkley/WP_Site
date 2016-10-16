@@ -1,8 +1,9 @@
 #
-# Cookbook Name:: mingw
-# Library:: _helper
+# Author:: Shawn Neal (<sneal@sneal.net>)
+# Cookbook Name:: seven_zip
+# Resource:: archive
 #
-# Copyright 2016, Chef Software, Inc.
+# Copyright:: 2013, Daptiv Solutions LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,22 +18,12 @@
 # limitations under the License.
 #
 
-module Mingw
-  module Helper
-    def win_friendly_path(path)
-      path.gsub(::File::SEPARATOR, ::File::ALT_SEPARATOR || '\\') if path
-    end
+default_action :extract
 
-    def archive_name(source)
-      url = ::URI.parse(source)
-      ::File.basename(::URI.unescape(url.path))
-    end
+actions :extract
 
-    def tar_name(source)
-      aname = archive_name(source)
-      ::File.basename(aname, ::File.extname(aname))
-    end
-  end
-end
-
-Chef::Resource.send(:include, Mingw::Helper)
+attribute :path, kind_of: String, name_attribute: true
+attribute :source, kind_of: String
+attribute :overwrite, kind_of: [TrueClass, FalseClass], default: false
+attribute :checksum, kind_of: String
+attribute :timeout, kind_of: Integer
