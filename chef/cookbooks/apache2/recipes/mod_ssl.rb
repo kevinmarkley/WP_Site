@@ -2,7 +2,7 @@
 # Cookbook Name:: apache2
 # Recipe:: mod_ssl
 #
-# Copyright 2008-2013, Chef Software, Inc.
+# Copyright 2008-2013, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,17 +16,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-if node['apache']['listen'] == ['*:80']
-  node.default['apache']['listen'] = ['*:80', "*:#{node['apache']['mod_ssl']['port']}"]
+unless node['apache']['listen_ports'].include?('443')
+  node.set['apache']['listen_ports'] = node['apache']['listen_ports'] + ['443']
 end
 
 include_recipe 'apache2::default'
 
 if platform_family?('rhel', 'fedora', 'suse')
-  if 'suse' != node['platform']
-    package node['apache']['mod_ssl']['pkg_name'] do
-      notifies :run, 'execute[generate-module-list]', :immediately
-    end
+  package 'mod_ssl' do
+    notifies :run, 'execute[generate-module-list]', :immediately
   end
 
   file "#{node['apache']['dir']}/conf.d/ssl.conf" do

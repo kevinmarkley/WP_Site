@@ -1,9 +1,9 @@
 #
-# Author:: Seth Chisamore (<schisamo@chef.io>)
+# Author:: Seth Chisamore (<schisamo@opscode.com>)
 # Cookbook Name:: iis
 # Recipe:: mod_auth_basic
 #
-# Copyright:: Copyright (c) 2011 Chef Software, Inc.
+# Copyright:: Copyright (c) 2011 Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,19 +18,14 @@
 # limitations under the License.
 #
 
-include_recipe 'iis'
+include_recipe "iis"
 
-feature = if Opscode::IIS::Helper.older_than_windows2008r2?
-            'Web-Basic-Auth'
-          else
-            'IIS-BasicAuthentication'
-          end
+if Opscode::IIS::Helper.older_than_windows2008r2?
+  feature = 'Web-Basic-Auth'
+else
+  feature = 'IIS-BasicAuthentication'
+end
 
 windows_feature feature do
   action :install
-end
-
-iis_section 'unlocks basic authentication control in web.config' do
-  section 'system.webServer/security/authentication/basicAuthentication'
-  action :unlock
 end

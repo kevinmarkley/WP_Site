@@ -18,8 +18,12 @@
 # limitations under the License.
 #
 
-actions :config, :clear, :set
-default_action :set
+actions :config
 
-attribute :cfg_cmd, kind_of: String, name_attribute: true
-attribute :returns, kind_of: [Integer, Array], default: 0
+attribute :cfg_cmd, :kind_of => String, :name_attribute => true
+attribute :returns, :kind_of => [Integer, Array], :default => 0
+
+def initialize(*args)
+  super
+  @action = :config
+end

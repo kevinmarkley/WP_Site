@@ -18,13 +18,14 @@
 # limitations under the License.
 #
 
-include_recipe 'iis'
+include_recipe "iis"
 
-feature = if Opscode::IIS::Helper.older_than_windows2008r2?
-            'Web-CGI'
-          else
-            'IIS-CGI'
-          end
+
+if Opscode::IIS::Helper.older_than_windows2008r2?
+  feature = 'Web-CGI'
+else
+  feature = 'IIS-CGI'
+end
 
 windows_feature feature do
   action :install
