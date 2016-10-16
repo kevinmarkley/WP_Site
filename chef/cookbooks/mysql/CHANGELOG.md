@@ -2,20 +2,13 @@ mysql Cookbook CHANGELOG
 ========================
 This file is used to list changes made in each version of the mysql cookbook.
 
-v6.0.0 (2014-12-15)
+v5.6.3 (2014-04-18)
 ------------------
-- Major version update
-- Cookbook now provides LWRPs instead of recipes
-- Platform providers re-factored into init system providers
-- Separated :create and :start actions for use in recipes that build containers
-- mysql_service now supports multiple instances on the same machine
-- mysql_service no longer attempts to manage user records
-- Removal of debian-sys-maint
-- Unified Sysvinit script that works on all platforms
-- mysql_config resource introduced
-- mysql_client fixed up
-- Refactored acceptance tests
-- Temporarily dropped FreeBSD support
+- #329 - Stop polluting Chef::Resource with methods
+
+v5.6.2 (2014-04-17)
+------------------
+- #328 - Fixing helper method class pollution
 
 v5.6.1 (2014-10-29)
 ------------------

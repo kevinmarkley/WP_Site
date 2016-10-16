@@ -3,106 +3,47 @@ Mysql2 Chef Gem Installer Cookbook
 
 [![Build Status](https://travis-ci.org/sinfomicien/mysql2_chef_gem.png)](https://travis-ci.org/sinfomicien/mysql2_chef_gem)
 
-mysql2_chef_gem is a library cookbook that provides an LWRP for use
-in recipes. It provides a wrapper around `chef_gem` called
-`mysql2_chef_gem` that eases the installation process, collecting the
-prerequisites and side-stepping the compilation phase arms race.
-
 Scope
 -----
-This cookbook is concerned with the installation of the `mysql2`
-Rubygem into Chef's gem path. Installation into other Ruby
-environments, or installation of related gems such as `mysql` are
-outside the scope of this cookbook.
+This cookbook automatize the mysql2 gem installation for a chef managed install
 
 Requirements
 ------------
 * Chef 11 or higher
 * Ruby 1.9 (preferably from the Chef full-stack installer)
 
-Platform Support
-----------------
-The following platforms have been tested with Test Kitchen and are
-known to work.
+#### cookbook::recipe
+- `mysql::client` - this recipe is needed if you want to link the mysql2 gem to a mysql client library
+- `mariadb::client` - this recipe is needed if you want to link the mysql2 gem to a mariadb client library
 
-```
-|---------------------------------------+-----+-----+-----+-----+-----|
-|                                       | 5.0 | 5.1 | 5.5 | 5.6 | 5.7 |
-|---------------------------------------+-----+-----+-----+-----+-----|
-| Mysql2ChefGem::Mysql / centos-5       |   X |     |     | X   | X   |
-|---------------------------------------+-----+-----+-----+-----+-----|
-| Mysql2ChefGem::Mysql / centos-6       |     | X   | X   | X   | X   |
-|---------------------------------------+-----+-----+-----+-----+-----|
-| Mysql2ChefGem::Mysql / centos-7       |     |     | X   | X   | X   |
-|---------------------------------------+-----+-----+-----+-----+-----|
-| Mysql2ChefGem::Mysql / fedora-20      |     |     | X   | X   | X   |
-|---------------------------------------+-----+-----+-----+-----+-----|
-| Mysql2ChefGem::Mysql / debian-7       |     |     | X   |     |     |
-|---------------------------------------+-----+-----+-----+-----+-----|
-| Mysql2ChefGem::Mysql / ubuntu-10.04   |     | X   |     |     |     |
-|---------------------------------------+-----+-----+-----+-----+-----|
-| Mysql2ChefGem::Mysql / ubuntu-12.04   |     |     | X   |     |     |
-|---------------------------------------+-----+-----+-----+-----+-----|
-| Mysql2ChefGem::Mysql / ubuntu-14.04   |     |     | X   | X   |     |
-|---------------------------------------+-----+-----+-----+-----+-----|
-| Mysql2ChefGem::Mariadb / fedora-20    |     |     | X   |     |     |
-|---------------------------------------+-----+-----+-----+-----+-----|
-| Mysql2ChefGem::Mariadb / ubuntu-14.04 |     |     | X   |     |     |
-|---------------------------------------+-----+-----+-----+-----+-----|
-```
+Resources / Providers
+---------------------
+### Example
+
+    include_recipe 'mysql2_chef_gem'
+
+Recipes
+-------
+### mysql2_chef_gem::default
+
+This recipe call the installation of the mysql2 gem, using the mysql cookbook (call mysql::client to install needed development files)
+
+### mysql2_chef_gem::mariadb
+
+This recipe call the installation of the mysql2 gem, using the mariadb cookbook (call mariadb::client to install needed development files)
 
 Usage
 -----
-Place a dependency on the mysql cookbook in your cookbook's metadata.rb
-```ruby
-depends 'mysql2_chef_gem', '~> 1.0'
+Use it in your wrapper cookbook:
 ```
-
-Then, in a recipe:
-
-```ruby
-mysql2_chef_gem 'default' do
-  action :install
-end
+    include_recipe 'mysql2_chef_gem'
 ```
-
-Resources Overview
-------------------
-### mysql2_chef_gem
-
-The `mysql2_chef_gem` resource the build dependencies and installation
-of the `mysql2` rubygem into Chef's Ruby environment
-
-#### Example
-```ruby
-mysql2_chef_gem 'default' do
-  gem_version '0.3.17'
-  action :install
-end
+or
 ```
-#### Parameters
-- `gem_version` - The version of the `mysql` Rubygem to install into
-  the Chef environment. Defaults to '0.3.17'
-  connector libraries
-- `client_version` - The version of the mysql client libraries to
-  install and link against
-
-#### Actions
-- `:install` - Build and install the gem into the Chef environment
-- `:remove` - Delete the gem from the Chef environment
-
-#### Providers
-Chef selects a default provider based on platform and version,
-but you can specify one if your platform support it.
-
-```ruby
-mysql2_chef_gem 'default' do
-  provider Chef::Provider::Mysql2ChefGem::Mariadb
-  action :install
-end
+    include_recipe 'mysql2_chef_gem::mariadb'
 ```
 
 Authors
 -------
-- Author:: Sean OMeara (<someara@chef.io>)
+- Author:: Sean OMeara (<someara@opscode.com>)
 - Author:: Nicolas Blanc(<sinfomicien@gmail.com>)
