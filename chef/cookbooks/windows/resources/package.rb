@@ -1,7 +1,7 @@
 #
 # Author:: Seth Chisamore (<schisamo@opscode.com>)
 # Cookbook Name:: windows
-# Recipe:: default
+# Resource:: package
 #
 # Copyright:: 2011, Opscode, Inc.
 #
@@ -18,17 +18,19 @@
 # limitations under the License.
 #
 
-# gems with precompiled binaries
-%w{ win32-api win32-service }.each do |win_gem|
-  gem_package win_gem do
-    options '--platform=mswin32'
-    action :install
-  end
-end
+actions :install, :remove
 
-# the rest
-%w{ windows-api windows-pr win32-dir win32-event win32-mutex }.each do |win_gem|
-  gem_package win_gem do
-    action :install
-  end
-end
+attribute :package_name, :kind_of => String, :name_attribute => true
+attribute :source, :kind_of => String, :required => true
+attribute :version, :kind_of => String
+attribute :options, :kind_of => String
+attribute :installer_type, :kind_of => Symbol, :default => nil, :equal_to => [:msi, :inno, :nsis, :wise, :installshield, :custom]
+attribute :checksum, :kind_of => String
+
+# TODO 
+
+# add preseeding support
+#attribute :response_file 
+
+# allow target dirtory of installation to be set
+#attribute :target_dir

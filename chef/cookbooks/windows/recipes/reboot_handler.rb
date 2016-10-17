@@ -1,9 +1,9 @@
 #
-# Author:: Seth Chisamore (<schisamo@chef.io>)
+# Author:: Seth Chisamore (<schisamo@opscode.com>)
 # Cookbook Name:: windows
 # Recipe:: restart_handler
 #
-# Copyright:: 2011-2015, Chef Software, Inc.
+# Copyright:: 2011, Opscode, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 remote_directory node['chef_handler']['handler_path'] do
   source 'handlers'
+  mode "0755"
   recursive true
   action :create
 end
@@ -27,6 +28,6 @@ end
 chef_handler 'WindowsRebootHandler' do
   source "#{node['chef_handler']['handler_path']}/windows_reboot_handler.rb"
   arguments node['windows']['allow_pending_reboots']
-  supports report: true, exception: node['windows']['allow_reboot_on_failure']
+  supports :report => true, :exception => false
   action :enable
 end
