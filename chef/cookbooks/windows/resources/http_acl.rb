@@ -1,9 +1,9 @@
 #
-# Author:: Paul Morton (<pmorton@biaprotect.com>)
+# Author:: Richard Lavey (richard.lavey@calastone.com)
 # Cookbook Name:: windows
-# Resource:: auto_run
+# Resource:: http_acl
 #
-# Copyright:: 2011, Business Intelligence Associates, Inc
+# Copyright:: 2015, Calastone Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,13 +18,10 @@
 # limitations under the License.
 #
 
-def initialize(name, run_context = nil)
-  super
-  @action = :create
-end
+actions :create, :delete
+default_action :create
 
-actions :create, :remove
+attribute :url, kind_of: String, name_attribute: true, required: true
+attribute :user, kind_of: String
 
-attribute :program, kind_of: String
-attribute :name, kind_of: String, name_attribute: true
-attribute :args, kind_of: String, default: ''
+attr_accessor :exists

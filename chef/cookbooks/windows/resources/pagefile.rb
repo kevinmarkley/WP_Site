@@ -1,9 +1,9 @@
 #
-# Author:: Paul Morton (<pmorton@biaprotect.com>)
+# Author:: Kevin Moser (<kevin.moser@nordstrom.com>)
 # Cookbook Name:: windows
-# Resource:: auto_run
+# Resource:: pagefile
 #
-# Copyright:: 2011, Business Intelligence Associates, Inc
+# Copyright:: 2012, Nordstrom, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,13 +18,12 @@
 # limitations under the License.
 #
 
-def initialize(name, run_context = nil)
-  super
-  @action = :create
-end
+actions :set, :delete
 
-actions :create, :remove
-
-attribute :program, kind_of: String
 attribute :name, kind_of: String, name_attribute: true
-attribute :args, kind_of: String, default: ''
+attribute :system_managed, kind_of: [TrueClass, FalseClass]
+attribute :automatic_managed, kind_of: [TrueClass, FalseClass], default: false
+attribute :initial_size, kind_of: Integer
+attribute :maximum_size, kind_of: Integer
+
+default_action :set

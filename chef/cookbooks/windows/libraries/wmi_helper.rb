@@ -1,9 +1,7 @@
 #
-# Author:: Paul Morton (<pmorton@biaprotect.com>)
-# Cookbook Name:: windows
-# Resource:: auto_run
+# Author:: Adam Edwards (<adamed@chef.io>)
 #
-# Copyright:: 2011, Business Intelligence Associates, Inc
+# Copyright:: 2014-2015, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,13 +16,17 @@
 # limitations under the License.
 #
 
-def initialize(name, run_context = nil)
-  super
-  @action = :create
+if RUBY_PLATFORM =~ /mswin|mingw32|windows/
+  require 'win32ole'
+
+  def execute_wmi_query(wmi_query)
+    wmi = ::WIN32OLE.connect('winmgmts://')
+    result = wmi.ExecQuery(wmi_query)
+    return nil unless result.each.count > 0
+    result
+  end
+
+  def wmi_object_property(wmi_object, wmi_property)
+    wmi_object.send(wmi_property)
+  end
 end
-
-actions :create, :remove
-
-attribute :program, kind_of: String
-attribute :name, kind_of: String, name_attribute: true
-attribute :args, kind_of: String, default: ''

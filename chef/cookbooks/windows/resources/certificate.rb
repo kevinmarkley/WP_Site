@@ -1,9 +1,9 @@
 #
-# Author:: Paul Morton (<pmorton@biaprotect.com>)
+# Author:: Richard Lavey (richard.lavey@calastone.com)
 # Cookbook Name:: windows
-# Resource:: auto_run
+# Resource:: certificate
 #
-# Copyright:: 2011, Business Intelligence Associates, Inc
+# Copyright:: 2015, Calastone Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,13 +18,11 @@
 # limitations under the License.
 #
 
-def initialize(name, run_context = nil)
-  super
-  @action = :create
-end
+actions :create, :delete, :acl_add
+default_action :create
 
-actions :create, :remove
-
-attribute :program, kind_of: String
-attribute :name, kind_of: String, name_attribute: true
-attribute :args, kind_of: String, default: ''
+attribute :source, kind_of: String, name_attribute: true, required: true
+attribute :pfx_password, kind_of: String
+attribute :private_key_acl, kind_of: Array
+attribute :store_name, kind_of: String, default: 'MY', regex: /^(?:MY|CA|ROOT)$/
+attribute :user_store, kind_of: [TrueClass, FalseClass], default: false

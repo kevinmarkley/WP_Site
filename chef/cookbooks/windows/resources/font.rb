@@ -1,9 +1,9 @@
 #
-# Author:: Paul Morton (<pmorton@biaprotect.com>)
+# Author:: Sander Botman <sbotman@schubergphilis.com>
 # Cookbook Name:: windows
-# Resource:: auto_run
+# Resource:: font
 #
-# Copyright:: 2011, Business Intelligence Associates, Inc
+# Copyright:: 2014, Schuberg Philis BV.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,13 +18,8 @@
 # limitations under the License.
 #
 
-def initialize(name, run_context = nil)
-  super
-  @action = :create
-end
+actions :install
 
-actions :create, :remove
+default_action :install
 
-attribute :program, kind_of: String
-attribute :name, kind_of: String, name_attribute: true
-attribute :args, kind_of: String, default: ''
+attribute :file, kind_of: String, name_attribute: true
