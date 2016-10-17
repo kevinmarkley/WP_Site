@@ -14,7 +14,7 @@ override['wordpress']['db']['root_password'] = 'myrootpassword'
 override['wordpress']['db']['instance_name'] = 'default'
 override['wordpress']['db']['name'] = "wordpressdb"
 override['wordpress']['db']['user'] = node['cloud']['db_user']
-override['wordpress']['db']['pass'] = node['cloud']['db_password']
+override['wordpress']['db']['pass'] = "wordpresspass"
 override['wordpress']['db']['prefix'] = 'wp_'
 override['wordpress']['db']['host'] = 'localhost'
 
