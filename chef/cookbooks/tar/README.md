@@ -1,3 +1,7 @@
+*This cookbook is no longer actively maintained and is up for adoption. If you
+would like to take over development, go to https://supermarket.chef.io/cookbooks/tar,
+click the "Adopt me!" button, and you could be the new maintainer of this cookbook!*
+
 DESCRIPTION
 ===========
 
@@ -49,15 +53,15 @@ A `tar_extract` LWRP provides an easy way to download remote tar files and extra
 
 `tar_package`
 - source: name attribute. The source remote URL.
-- headers: request headers sent when downloading the file (for instance for authentication)
 - prefix: Directory to be used as the `--prefix` configure flag.
 - source\_directory: Directory to which source files are download.
 - creates: A file this command creates - if the file exists, the command will not be run.
 - configure\_flags: Array of additional flags to be passed to `./configure`.
+- archive\_name: Specify a different name for the downloaded archive. Use it if the directory name inside the tar file is different than the name defined in the URL.
+Additionally, `tar_package` supports most `remote_file` [attributes](https://docs.chef.io/chef/resources.html#remote-file).
 
 `tar_extract`
 - source: name attribute. The source remote URL.
-- headers: request headers sent when downloading the file (for instance for authentication)
 - target\_dir: Directory to extract into, e.g. tar xzf -C (target_dir)
 - download\_dir: Directory to which tarball is downloaded (defaults to chef cache which requires root `group` and `user`).
 - creates: A file this command creates - if the file exists, the command will not be run.
@@ -65,6 +69,7 @@ A `tar_extract` LWRP provides an easy way to download remote tar files and extra
 - tar\_flags: Array of additional flags to be passed to tar xzf command.
 - group: Group name or group ID to extract the archive under. If set to non-root group, point to a `download_dir` the group has permission to access.
 - user: User name or user ID to extract the archive under. If set to non-root user, point to a `download_dir` the user has permission to access.
+Additionally, `tar_extract` supports most `remote_file` [attributes](https://docs.chef.io/chef/resources.html#remote-file).
 
 # Example
 
@@ -81,7 +86,7 @@ This will download, compile, and install the package from the given URL and inst
       tar_flags [ '-P', '--strip-components 1' ]
     end
 
-This will download the tarball to cache, extract the contents to /opt/myapp/mycode, use the file '/opt/myapp/mycode/bin' to determine idempotency, and pass both '-P' and '--strip-components 1' flags to the tar xzf command.
+This will download the tarball to cache, extract the contents to /opt/myapp/mycode, use the file '/opt/myapp/mycode/lib' to determine idempotency, and pass both '-P' and '--strip-components 1' flags to the tar xzf command.
 
     tar_extract '/tmp/mycode-1.2.3.tar.gz' do
       action :extract_local
@@ -90,3 +95,7 @@ This will download the tarball to cache, extract the contents to /opt/myapp/myco
     end
 
 This will extract the contents of /tmp/mycode-1.2.3.tar.gz to /opt/myapp/mycode and use the file '/opt/myapp/mycode/lib' to determine idempotency.
+
+# ChefSpec Matchers
+
+ChefSpec matchers are defined for tar_package and tar_extract.

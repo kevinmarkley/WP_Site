@@ -2,6 +2,29 @@ windows Cookbook CHANGELOG
 =======================
 This file is used to list changes made in each version of the windows cookbook.
 
+v1.42.0
+--------------------
+- [PR 365](https://github.com/chef-cookbooks/windows/pull/365) - Escape command quotes when passing to schtasks
+
+v1.41.0
+--------------------
+- [PR 364](https://github.com/chef-cookbooks/windows/pull/364) - Configurable font source
+
+v1.40.0
+--------------------
+- [PR 357](https://github.com/chef-cookbooks/windows/pull/357) - Fixes for schtasks
+- [PR 359](https://github.com/chef-cookbooks/windows/pull/359) - take bundler out of the appveyor build
+- [PR 356](https://github.com/chef-cookbooks/windows/pull/356) - Misc fixes and updates
+- [PR 355](https://github.com/chef-cookbooks/windows/pull/355) - bump and pin rubocop, fix broken cop
+- [PR 348](https://github.com/chef-cookbooks/windows/pull/348) - Make notify work for `windows_task`
+
+v1.39.2
+--------------------
+- [PR 329](https://github.com/chef-cookbooks/windows/pull/329) - Silence `compile_time` warning for `chef_gem`
+- [PR 338](https://github.com/chef-cookbooks/windows/pull/338) - ChefSpec matchers for `windows_certificate`
+- [PR 341](https://github.com/chef-cookbooks/windows/pull/341) - Updated rubocop and FoodCritic compliance
+- [PR 336](https://github.com/chef-cookbooks/windows/pull/336) - Fixed where clause compliance with PS v1/v2
+
 v1.39.1
 --------------------
 - [PR 325](https://github.com/chef-cookbooks/windows/pull/325) - Raise an error if a bogus feature is given to the powershell `windows_feature` provider

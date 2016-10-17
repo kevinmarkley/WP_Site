@@ -33,9 +33,9 @@ def install_key_from_keyserver(key, keyserver)
     end
     action :run
     not_if do
-        extract_fingerprints_from_cmd("apt-key finger").any? do |fingerprint|
-            fingerprint.end_with?(key.upcase)
-        end
+      extract_fingerprints_from_cmd("apt-key finger").any? do |fingerprint|
+        fingerprint.end_with?(key.upcase)
+      end
     end
   end
 end
@@ -112,13 +112,13 @@ action :add do
     action :nothing
   end
 
-    # build repo file
-    repository = build_repo(new_resource.uri,
-                            new_resource.distribution,
-                            new_resource.components,
-                            new_resource.trusted,
-                            new_resource.arch,
-                            new_resource.deb_src)
+  # build repo file
+  repository = build_repo(new_resource.uri,
+                          new_resource.distribution,
+                          new_resource.components,
+                          new_resource.trusted,
+                          new_resource.arch,
+                          new_resource.deb_src)
 
   file "/etc/apt/sources.list.d/#{new_resource.name}.list" do
     owner "root"
