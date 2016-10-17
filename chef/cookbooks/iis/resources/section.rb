@@ -1,9 +1,9 @@
 #
-# Author:: Seth Chisamore (<schisamo@chef.io>)
+# Author:: Justin Schuhmann
 # Cookbook Name:: iis
-# Recipe:: mod_diagnostics
+# Resource:: lock
 #
-# Copyright 2011, Chef Software, Inc.
+# Copyright:: Justin Schuhmann
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,14 +18,10 @@
 # limitations under the License.
 #
 
-include_recipe 'iis'
+actions :lock, :unlock
+default_action :lock
 
-feature = if Opscode::IIS::Helper.older_than_windows2008r2?
-            'Web-Http-Tracing'
-          else
-            'IIS-HTTPTracing'
-          end
+attribute :section, kind_of: String
+attribute :returns, kind_of: [Integer, Array], default: 0
 
-windows_feature feature do
-  action :install
-end
+attr_accessor :exists

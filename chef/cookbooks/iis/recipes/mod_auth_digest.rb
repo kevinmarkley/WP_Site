@@ -1,9 +1,9 @@
 #
-# Author:: Seth Chisamore (<schisamo@chef.io>)
+# Author:: Justin Schuhmann
 # Cookbook Name:: iis
-# Recipe:: mod_diagnostics
+# Recipe:: mod_auth_basic
 #
-# Copyright 2011, Chef Software, Inc.
+# Copyright:: Justin Schuhmann
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,11 +21,16 @@
 include_recipe 'iis'
 
 feature = if Opscode::IIS::Helper.older_than_windows2008r2?
-            'Web-Http-Tracing'
+            'Web-Digest-Auth'
           else
-            'IIS-HTTPTracing'
+            'IIS-DigestAuthentication'
           end
 
 windows_feature feature do
   action :install
+end
+
+iis_section 'unlocks digest authentication control in web.config' do
+  section 'system.webServer/security/authentication/digestAuthentication'
+  action :unlock
 end

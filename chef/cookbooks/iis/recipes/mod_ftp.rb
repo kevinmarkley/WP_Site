@@ -1,9 +1,9 @@
 #
-# Author:: Seth Chisamore (<schisamo@chef.io>)
+# Author:: Kevin Rivers (<kevin@kevinrivers.com>)
 # Cookbook Name:: iis
-# Recipe:: mod_diagnostics
+# Recipe:: mod_ftp
 #
-# Copyright 2011, Chef Software, Inc.
+# Copyright 2014, Kevin Rivers
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,12 +20,14 @@
 
 include_recipe 'iis'
 
-feature = if Opscode::IIS::Helper.older_than_windows2008r2?
-            'Web-Http-Tracing'
-          else
-            'IIS-HTTPTracing'
-          end
+features = if Opscode::IIS::Helper.older_than_windows2008r2?
+             %w(Web-Ftp-Server Web-Ftp-Service Web-Ftp-Ext)
+           else
+             %w(IIS-FTPServer IIS-FTPSvc IIS-FTPExtensibility)
+           end
 
-windows_feature feature do
-  action :install
+features.each do |f|
+  windows_feature f do
+    action :install
+  end
 end

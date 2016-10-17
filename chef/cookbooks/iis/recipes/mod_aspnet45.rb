@@ -1,7 +1,7 @@
 #
-# Author:: Seth Chisamore (<schisamo@chef.io>)
+# Author:: Blair Hamilton (<blairham@me.com>)
 # Cookbook Name:: iis
-# Recipe:: mod_diagnostics
+# Recipe:: mod_aspnet45
 #
 # Copyright 2011, Chef Software, Inc.
 #
@@ -19,13 +19,16 @@
 #
 
 include_recipe 'iis'
+include_recipe 'iis::mod_isapi'
 
-feature = if Opscode::IIS::Helper.older_than_windows2008r2?
-            'Web-Http-Tracing'
-          else
-            'IIS-HTTPTracing'
-          end
+features = if Opscode::IIS::Helper.older_than_windows2008r2?
+             %w(NET-Framework)
+           else
+             %w(NetFx4Extended-ASPNET45 IIS-NetFxExtensibility45 IIS-ASPNET45)
+           end
 
-windows_feature feature do
-  action :install
+features.each do |feature|
+  windows_feature feature do
+    action :install
+  end
 end
