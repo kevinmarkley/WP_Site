@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: build-essential
-# Recipe:: default
+# Recipe:: debian
 #
 # Copyright 2008-2016, Chef Software, Inc.
 #
@@ -17,13 +17,12 @@
 # limitations under the License.
 #
 
-begin
-  include_recipe "build-essential::_#{node['platform_family']}"
-rescue Chef::Exceptions::RecipeNotFound
-  Chef::Log.warn <<-EOH
-A build-essential recipe does not exist for '#{node['platform_family']}'. This
-means the build-essential cookbook does not have support for the
-#{node['platform_family']} family. If you are not compiling gems with native
-extensions or building packages from source, this will likely not affect you.
-EOH
+potentially_at_compile_time do
+  package 'autoconf'
+  package 'binutils-doc'
+  package 'bison'
+  package 'build-essential'
+  package 'flex'
+  package 'gettext'
+  package 'ncurses-dev'
 end
