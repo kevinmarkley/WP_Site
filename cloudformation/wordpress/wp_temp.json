@@ -6,13 +6,13 @@
   "Parameters" : {
 
     "WPAdmin" : {
-      "Default": "WPAdmin",
+      "Default": "wpadmin",
       "Description" : "The WordPress Admin Name",
       "Type": "String"
     },
 
     "WPAdminPass" : {
-      "Default": "WPpassAD",
+      "Default": "wppass1",
       "Description" : "The WordPress Admin Password",
       "Type": "String"
     },
@@ -66,36 +66,6 @@
       "AllowedValues" : [ "db.t1.micro", "db.m1.small", "db.m1.medium", "db.m1.large", "db.m1.xlarge", "db.m2.xlarge", "db.m2.2xlarge", "db.m2.4xlarge", "db.m3.medium", "db.m3.large", "db.m3.xlarge", "db.m3.2xlarge", "db.m4.large", "db.m4.xlarge", "db.m4.2xlarge", "db.m4.4xlarge", "db.m4.10xlarge", "db.r3.large", "db.r3.xlarge", "db.r3.2xlarge", "db.r3.4xlarge", "db.r3.8xlarge", "db.m2.xlarge", "db.m2.2xlarge", "db.m2.4xlarge", "db.cr1.8xlarge", "db.t2.micro", "db.t2.small", "db.t2.medium", "db.t2.large"]
     ,
       "ConstraintDescription" : "must select a valid database instance type."
-    },
-
-    "DBName" : {
-      "Default": "wordpressdb",
-      "Description" : "The WordPress database name",
-      "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "64",
-      "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
-      "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
-    },
-
-    "DBUser" : {
-      "NoEcho": "true",
-      "Description" : "The WordPress database admin account user name",
-      "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "16",
-      "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
-      "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
-    },
-
-    "DBPassword" : {
-      "NoEcho": "true",
-      "Description" : "The WordPress database admin account password",
-      "Type": "String",
-      "MinLength": "8",
-      "MaxLength": "41",
-      "AllowedPattern" : "[a-zA-Z0-9]*",
-      "ConstraintDescription" : "must contain only alphanumeric characters."
     },
 
     "MultiAZDatabase": {
@@ -300,7 +270,7 @@
         "VpcId" : { "Ref" : "VPC" },
         "GroupDescription" : "Enable SSH access via port 22",
         "SecurityGroupIngress" : [
-          {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "73.170.14.149/32"},
+          {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "97.86.129.102/32"},
           {"IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : { "Ref" : "AllowHTTP"}}],
         "SecurityGroupEgress" : []
       }
@@ -356,7 +326,7 @@
         "cat <<'EOF' >> /root/1-get_Chef.sh\n",
 
         "#!/bin/bash\n",
-        "CHEF_VERSION=\"12.15.19\"\n",
+        "CHEF_VERSION=\"12.10.24\"\n",
         "if rpm -qa | grep chef | grep $VERSION; then\n",
         "   exit\n",
         "elif rpm -qa | grep chef | grep -v $CHEF_VERSION; then\n",
@@ -390,9 +360,9 @@
         "log_location     \"/var/log/chef-client.log\"\n",
         "ssl_verify_mode :verify_none\n",
         "node_name 'kmarkley'\n",
-        "client_key \"/root/markley-chef.pem\"\n",
-        "validation_client_name  'markley-validator'\n",
-        "validation_key          \"/root/markley-validator.pem\"\n",
+        "client_key \"/root/kmarkley-chef.pem\"\n",
+        "validation_client_name  'kmarkley-validator'\n",
+        "validation_key          \"/root/kmarkley-validator.pem\"\n",
         "chef_server_url         \"https://$CHEF_SERVER/organizations/kmarkley\"\n",
         "cache_type 'BasicFile'\n",
         "cache_options( :path => \"#{ENV['HOME']}/.chef/checksums\" )\n",
@@ -508,7 +478,8 @@
               "# Clone github repo\n",
               "cat <<'EOF' >> /root/2-git-setup.sh\n",
               "#!/bin/bash\n",
-              "cd /\n",
+              "mkdir -p /etc/chef\n",
+              "cd /etc/chef\n",
               "git clone https://github.com/kevinmarkley/WP_Site.git\n",
               "EOF\n",
               "chmod 755 /root/2-git-setup.sh\n",
@@ -547,10 +518,8 @@
 
               "WP_SERVER=`curl -s http://169.254.169.254/latest/meta-data/public-ipv4`\n",
 
-              "mkdir -p /etc/chef\n",
-
               "# Get chef certs\n",
-              "scp -o StrictHostKeyChecking=no -i /root/.ssh/key.pem ec2-user@$CHEF_SERVER:/tmp/markley-validator.pem /etc/chef\n",
+              "scp -o StrictHostKeyChecking=no -i /root/.ssh/key.pem ec2-user@$CHEF_SERVER:/tmp/kmarkley-validator.pem /etc/chef\n",
 
               "cat > /etc/chef/client.rb << EOF\n",
               "current_dir = File.dirname(__FILE__)\n",
@@ -558,8 +527,8 @@
               "log_location     \"/var/log/chef-client.log\"\n",
               "ssl_verify_mode :verify_none\n",
               "node_name \"wordpress\"\n",
-              "validation_client_name  'markley-validator'\n",
-              "validation_key          \"/etc/chef/markley-validator.pem\"\n",
+              "validation_client_name  'kmarkley-validator'\n",
+              "validation_key          \"#{current_dir}/kmarkley-validator.pem\"\n",
               "chef_server_url         \"https://$CHEF_SERVER/organizations/kmarkley\"\n",
               "cookbook_path            [\"/etc/chef/WP_Site/chef/cookbooks\"]\n",
               "EOF\n",
@@ -569,10 +538,10 @@
               "{\n",
               "   \"run_list\": [\"wordpress-markley\"", "],\n",
               "   \"cloud\": {\n",
-              "    \"WPAdmin\": \"", {"Ref" : "WPAdmin"} , "\", \n",
-              "    \"WPAdminPass\": \"", {"Ref" : "WPAdminPass"} , "\", \n",
-              "    \"WPAdminEmail\": \"", {"Ref" : "WPAdminEmail"} , "\", \n",
-              "    \"WPServer\": \"$WP_SERVER\", \n",
+              "    \"wp_user\": \"", {"Ref" : "WPAdmin"} , "\", \n",
+              "    \"wp_password\": \"", {"Ref" : "WPAdminPass"} , "\", \n",
+              "    \"wp_email\": \"", {"Ref" : "WPAdminEmail"} , "\", \n",
+              "    \"wp_server\": \"$WP_SERVER\", \n",
               "    \"region_from_template\": \"", {"Ref" : "AWS::Region"} , "\" \n",
               "  } \n",
               "}\n",
