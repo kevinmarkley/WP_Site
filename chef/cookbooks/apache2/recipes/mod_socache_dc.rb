@@ -1,8 +1,8 @@
 #
 # Cookbook Name:: apache2
-# Recipe:: logrotate
+# Recipe:: mod_socache_dc
 #
-# Copyright 2012, Opscode, Inc.
+# Copyright 2016, Alexander van Zoest
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,15 +17,4 @@
 # limitations under the License.
 #
 
-apache_service = service 'apache2' do
-  action :nothing
-end
-
-begin
-  include_recipe 'logrotate'
-rescue
-  Chef::Log.warn('The apache::logrotate recipe requires the logrotate cookbook. Install the cookbook with `knife cookbook site install logrotate`.')
-end
-logrotate_app apache_service.service_name do
-  path "#{node['apache']['log_dir']}/*.log"
-end
+apache_module 'socache_dc'

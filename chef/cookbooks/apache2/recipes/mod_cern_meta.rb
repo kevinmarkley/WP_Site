@@ -1,9 +1,8 @@
 #
 # Cookbook Name:: apache2
-# Recipe:: mod_cgid
+# Recipe:: mod_cern_meta
 #
-# Copyright 2013, OneHealth Solutions, Inc.
-# Copyright 2014, Viverae, Inc.
+# Copyright 2016, Alexander van Zoest
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +17,4 @@
 # limitations under the License.
 #
 
-apache_module 'cgid' do
-  conf true
-end
+apache_module 'cern_meta'
