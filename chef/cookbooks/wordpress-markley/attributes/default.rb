@@ -10,11 +10,11 @@ default['wordpress-markley']['email'] = node['cloud']['WPAdminEmail']
 override['wordpress']['version'] = 'latest'
 override['wordpress']['dir'] = '/var/www/wordpress/'
 override['wordpress']['db']['mysql_version'] = '5.5'
-override['wordpress']['db']['root_password'] = nil
+override['wordpress']['db']['root_password'] = 'myrootpassword'
 override['wordpress']['db']['instance_name'] = 'default'
 override['wordpress']['db']['name'] = "wordpressdb"
 override['wordpress']['db']['user'] = node['cloud']['db_user']
-override['wordpress']['db']['pass'] = "wordpresspass"
+override['wordpress']['db']['pass'] = nil
 override['wordpress']['db']['prefix'] = 'wp_'
 override['wordpress']['db']['host'] = 'localhost'
 
