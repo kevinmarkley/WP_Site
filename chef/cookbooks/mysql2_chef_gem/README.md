@@ -83,9 +83,9 @@ end
 #### Parameters
 - `gem_version` - The version of the `mysql` Rubygem to install into
   the Chef environment. Defaults to '0.3.17'
+- `connectors_url` - URL of a tarball containing pre-compiled MySQL
   connector libraries
-- `client_version` - The version of the mysql client libraries to
-  install and link against
+- `connectors_checksum` - sha256sum of the `connectors_url` tarball
 
 #### Actions
 - `:install` - Build and install the gem into the Chef environment
@@ -104,5 +104,5 @@ end
 
 Authors
 -------
-- Author:: Sean OMeara (<someara@chef.io>)
+- Author:: Sean OMeara (<someara@opscode.com>)
 - Author:: Nicolas Blanc(<sinfomicien@gmail.com>)
