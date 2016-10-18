@@ -1,5 +1,5 @@
-default['wordpress-markley']['WPAdmin'] = node['cloud']['wp_user']
-default['wordpress-markley']['WPAdminPass'] = node['cloud']['wp_password']
+default['wordpress-markley']['wp_user'] = node['cloud']['wp_user']
+default['wordpress-markley']['wp_password'] = node['cloud']['wp_password']
 default['wordpress-markley']['private_key'] = 'kmarkley-chef.pem'
 default['wordpress-markley']['validator_key'] = 'kmarkley-validator.pem'
 default['wordpress-markley']['short_org'] = 'kmarkley'

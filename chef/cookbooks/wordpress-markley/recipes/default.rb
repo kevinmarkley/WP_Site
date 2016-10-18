@@ -29,7 +29,7 @@ end
 
 # Update wp-admin
 execute "update wp-admin" do
-  command "wp core install --path=\"/var/www/wordpress\" --url=\"#{node['wordpress-markley']['server']}\"  --title=\"Kevin Markley WP\" --admin_user=\"#{node['wordpress-markley']['WPAdmin']}\" --admin_password=\"#{node['wordpress-markley']['WPAdminPass']}\" --admin_email=\"#{node['wordpress-markley']['email']}\""
+  command "wp core install --path=\"/var/www/wordpress\" --url=\"#{node['wordpress-markley']['server']}\"  --title=\"Kevin Markley WP\" --admin_user=\"#{node['wordpress-markley']['wp_user']}\" --admin_password=\"#{node['wordpress-markley']['wp_password']}\" --admin_email=\"#{node['wordpress-markley']['email']}\""
   user 'ec2-user'
   group 'ec2-user'
   action :run
