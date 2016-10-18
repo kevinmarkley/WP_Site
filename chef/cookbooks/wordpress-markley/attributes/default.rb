@@ -1,4 +1,4 @@
-default['wordpress-markley']['wp_user'] = node['cloud']['wp_user']
+efault['wordpress-markley']['wp_user'] = node['cloud']['wp_user']
 default['wordpress-markley']['wp_password'] = node['cloud']['wp_password']
 default['wordpress-markley']['private_key'] = 'kmarkley-chef.pem'
 default['wordpress-markley']['validator_key'] = 'kmarkley-validator.pem'
@@ -12,11 +12,10 @@ override['wordpress']['db']['root_password'] = 'my_root_password'
 override['wordpress']['db']['instance_name'] = 'default'
 override['wordpress']['db']['name'] = "wordpressdb"
 override['wordpress']['db']['user'] = node['cloud']['db_user']
-override['wordpress']['db']['pass'] = nil
+override['wordpress']['db']['pass'] = node['cloud']['db_password']
 override['wordpress']['db']['prefix'] = 'wp_'
 override['wordpress']['db']['host'] = 'localhost'
 
-# override['php']['mysql']['package'] = 'php56-mysqlnd'
 override['php']['packages'] = %w(php55 php55-devel php55-cli php-pear)
 override['php']['mysql']['package'] = 'php55-mysqlnd'
 
