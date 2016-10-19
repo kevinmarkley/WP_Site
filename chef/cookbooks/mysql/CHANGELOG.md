@@ -2,46 +2,6 @@
 
 This file is used to list changes made in each version of the mysql cookbook.
 
-# v8.0.0 (2016-07-11)
-
-- Converting from LWRP to custom resources
-- Removing yum-mysql and other dependencies.
-- ^ BREAKING CHANGE: RHELish users are now responsible
-  for including a recipe from the "yum-mysql" or equivalent
-  cookbook before utilizing the mysql_* resources.
-- More thoughtful ChefSpec
-- Renaming "replication" test suite to "smoke"
-- Moving to Inspec
-
-## v7.2.0 (2016-06-30)
-
-- Support openeSUSE leap
-- Support Fedora 24
-
-## v7.1.2 (2016-06-30)
-
-- Avoid deprecation warnings on the upcoming Chef 12.12 release
-
-## v7.1.1 (2016-06-03)
-
-- Fix apparmor blocking writes to non-default tmp_dirs
-- Updated apparmor config to allow read & write to sock.lock file
-- Use cookstyle instead of Rubocop directly
-
-## v7.1.0 (2016-05-11)
-
-- Added support for Ubuntu 16.04
-
-## v7.0.0 (2016-04-19)
-
-- Removed support for legacy distros: Ubuntu 10.04/13.04/14.10/15.04, Fedora 20/21, OmniOS r151006, opensuse 11.3/12.0
-- Added support for Fedora 23, suse 13.X, and Ubuntu 16.04
-- Updated the systemd support to create unit files in /etc/systemd and not /usr/lib/systemd
-- Adding umask to bash resource that sets root password PR #386 @gziskind
-- Cleaned up the Test Kitchen config to test the right platform version + mysql pairings
-- Added Travis CI Test Kitchen testing on Fedora 22/23 and removed Fedora 21
-- Updated the platforms used in the specs
-
 ## v6.1.3 (2016-03-14)
 
 - Added support for Ubuntu 15.10
@@ -105,7 +65,7 @@ This file is used to list changes made in each version of the mysql cookbook.
 
 ## v6.0.21 (2015-04-08)
 
-- Fix to Upstart prestart script when using custom socket
+- Fix to Upstart prestart script  when using custom socket
 - Adding --explicit_defaults_for_timestamp mysql_install_db_cmd for
 - 5.6 and above
 
@@ -226,7 +186,7 @@ This file is used to list changes made in each version of the mysql cookbook.
 
 ## v5.5.4 (2014-10-07)
 
-- Adding sensitive flag to execute resources to protect passwords from logs
+- Adding sensitive flag to execute resources to protect passwords from logs  
 
 ## v5.5.3 (2014-09-24)
 
