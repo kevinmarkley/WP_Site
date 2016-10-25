@@ -1,48 +1,54 @@
-sudo: required
-dist: trusty
+---
+rvm: 2.2
 
-# install the pre-release chef-dk.  Use chef-stable-trusty to install the stable release
+sudo: required
+
 addons:
   apt:
     sources:
-      - chef-current-trusty
+      - chef-current-precise
     packages:
       - chefdk
 
-# Don't `bundle install` which takes about 1.5 mins
 install: echo "skip bundle install"
-
-branches:
-  only:
-    - master
 
 services: docker
 
 env:
   matrix:
-  - INSTANCE=smoke-centos-6
-  - INSTANCE=smoke-centos-7
-  - INSTANCE=smoke-fedora-latest
-  - INSTANCE=smoke-debian-8
-  - INSTANCE=smoke-ubuntu-1204
-  - INSTANCE=smoke-ubuntu-1404
-  - INSTANCE=smoke-ubuntu-1604
-  - INSTANCE=smoke-opensuse-132
-  - INSTANCE=smoke-opensuse-421
+  - INSTANCE=service50-multi-centos-5
+  - INSTANCE=service55-multi-centos-5
+  - INSTANCE=service55-multi-centos-6
+  - INSTANCE=service55-multi-centos-7
+  - INSTANCE=service55-multi-ubuntu-1204
+  - INSTANCE=service55-multi-ubuntu-1404
+  - INSTANCE=service56-multi-centos-5
+  - INSTANCE=service56-multi-centos-6
+  - INSTANCE=service56-multi-centos-7
+  - INSTANCE=service56-multi-fedora-21
+  - INSTANCE=service56-multi-ubuntu-1404
+  - INSTANCE=service56-multi-ubuntu-1504
+  - INSTANCE=service57-multi-centos-5
+  - INSTANCE=service57-multi-centos-6
+  - INSTANCE=service57-multi-centos-7
+  - INSTANCE=service57-multi-fedora-21
+  fast_finish: true
 
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
   - eval "$(/opt/chefdk/bin/chef shell-init bash)"
+  - /opt/chefdk/embedded/bin/chef gem install kitchen-dokken
 
-script: KITCHEN_LOCAL_YAML=.kitchen.docker.yml /opt/chefdk/embedded/bin/kitchen verify ${INSTANCE}
+script:
+  - /opt/chefdk/embedded/bin/chef --version
+  - /opt/chefdk/embedded/bin/rubocop --version
+  - /opt/chefdk/embedded/bin/rubocop
+  - /opt/chefdk/embedded/bin/foodcritic --version
+  - /opt/chefdk/embedded/bin/foodcritic . --exclude spec -f any
+  - /opt/chefdk/embedded/bin/rspec
+  - KITCHEN_LOCAL_YAML=.kitchen.dokken.yml kitchen verify ${INSTANCE}
 
-matrix:
-  include:
-    - before_script:
-      - eval "$(/opt/chefdk/bin/chef shell-init bash)"
-      - /opt/chefdk/embedded/bin/chef --version
-      - /opt/chefdk/embedded/bin/cookstyle --version
-      - /opt/chefdk/embedded/bin/foodcritic --version
-    - script:
-      - /opt/chefdk/bin/chef exec rake
-      env: UNIT_AND_LINT=1
+after_script:
+  - docker images
+  - docker ps -a
+  - cat .kitchen/logs/kitchen.log
