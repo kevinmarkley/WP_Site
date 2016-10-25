@@ -6,7 +6,7 @@ description 'Installs/Configures yum-mysql-community'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version '1.0.0'
 
-depends 'yum', '>= 3.2', '< 5.0'
+depends 'yum', '>= 3.2'
 
 %w(amazon centos fedora oracle redhat scientific).each do |os|
   supports os
