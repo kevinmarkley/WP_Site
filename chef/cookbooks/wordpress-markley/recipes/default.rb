@@ -4,6 +4,13 @@ include_recipe "wordpress"
 include_recipe "yum-mysql-community::mysql55"
 package 'mysql-devel'
 
+yum_repository 'mysql55-community' do
+  mirrorlist 'http://repo.mysql.com/yum/mysql55-community/el/$releasever/$basearch/'
+  description ''
+  enabled true
+  gpgcheck true
+end
+
 # Download the wp-cli
 execute "download wp-cli" do
   command "curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"
