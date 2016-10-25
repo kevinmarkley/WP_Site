@@ -21,3 +21,11 @@ override['php']['mysql']['package'] = 'php55-mysqlnd'
 
 override['wordpress']['server_name'] = node['fqdn']
 override['wordpress']['server_aliases'] = [node['fqdn'], "wordpress"]
+
+default['yum']['mysql-connectors-community']['repositoryid'] = 'mysql-connectors-community'
+default['yum']['mysql-connectors-community']['description'] = 'MySQL Connectors Community'
+default['yum']['mysql-connectors-community']['baseurl'] = 'http://repo.mysql.com/yum/mysql-connectors-community/el/$releasever/$basearch/'
+default['yum']['mysql-connectors-community']['gpgkey'] = 'https://raw.githubusercontent.com/rs-services/equinix-public/master/cookbooks/db_mysql/files/centos/mysql_pubkey.asc'
+default['yum']['mysql-connectors-community']['failovermethod'] = 'priority'
+default['yum']['mysql-connectors-community']['gpgcheck'] = true
+default['yum']['mysql-connectors-community']['enabled'] = true
