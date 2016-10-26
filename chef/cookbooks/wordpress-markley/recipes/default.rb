@@ -1,7 +1,7 @@
 ## See http://wp-cli.org/docs/installing/ for more info
 
 include_recipe "wordpress"
-# include_recipe "yum-mysql-community::mysql55"
+include_recipe "yum-mysql-community::mysql55"
 
 
 yum_repository 'mysql55-community' do
@@ -11,7 +11,7 @@ yum_repository 'mysql55-community' do
   gpgcheck true
 end
 
-package 'mysql-devel'
+# package 'mysql-devel'
 
 # Download the wp-cli
 # execute "download wp-cli" do
