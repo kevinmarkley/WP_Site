@@ -10,8 +10,7 @@
 #   gpgcheck true
 # end
 
-include_recipe "yum-mysql-community::mysql55"
-package 'mysql-devel'
+# package 'mysql-devel'
 package 'php55-devel'
 
 # include_recipe "wordpress"
