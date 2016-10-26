@@ -3,7 +3,7 @@
 
 
 
-yum_repository 'mysql55-community' do
+yum_repository 'mysql-community-client-5.5.53-2' do
   mirrorlist 'http://repo.mysql.com/yum/mysql-5.5-community/el/6/x86_64/'
   description ''
   enabled true
