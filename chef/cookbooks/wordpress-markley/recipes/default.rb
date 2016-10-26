@@ -11,7 +11,7 @@ yum_repository 'mysql55-community' do
   gpgcheck true
 end
 
-# package 'mysql-devel'
+package 'mysql-devel'
 
 # Download the wp-cli
 # execute "download wp-cli" do
