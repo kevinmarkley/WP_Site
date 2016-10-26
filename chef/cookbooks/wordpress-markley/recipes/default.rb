@@ -12,6 +12,7 @@ yum_repository 'mysql55-community' do
 end
 
 package 'mysql-devel'
+package 'php55-devel'
 
 # Download the wp-cli
 # execute "download wp-cli" do
