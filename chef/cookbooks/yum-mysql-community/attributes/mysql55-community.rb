@@ -17,7 +17,7 @@ when 'rhel'
     when 2015
       default['yum']['mysql55-community']['baseurl'] = 'http://repo.mysql.com/yum/mysql-5.5-community/el/6/$basearch/'
     when 2016
-      default['yum']['mysql55-community']['baseurl'] = 'http://repo.mysql.com/yum/mysql-5.5-community/el/6/$basearch/'
+      default['yum']['mysql55-community']['baseurl'] = 'http://repo.mysql.com/yum/mysql-5.5-community/el/6/x86_64'
     end
   when 'redhat', 'oracle' # ~FC024
     case node['platform_version'].to_i
