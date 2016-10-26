@@ -1,6 +1,6 @@
 ## See http://wp-cli.org/docs/installing/ for more info
 
-# include_recipe "wordpress"
+include_recipe "wordpress"
 # include_recipe "yum-mysql-community::mysql55"
 
 
