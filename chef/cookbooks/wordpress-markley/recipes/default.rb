@@ -5,7 +5,7 @@ include_recipe "yum-mysql-community::mysql55"
 
 
 yum_repository 'mysql55-community' do
-  mirrorlist 'http://repo.mysql.com/yum/mysql-5.5-community/el/6/x86_64/'
+  mirrorlist 'http://repo.mysql.com/yum/mysql-5.5-community/el/6/$basearch/'
   description ''
   enabled true
   gpgcheck true
