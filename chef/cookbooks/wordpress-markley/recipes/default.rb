@@ -13,8 +13,8 @@ end
 package 'mysql-devel'
 package 'php55-devel'
 
-include_recipe "wordpress"
-include_recipe "yum-mysql-community::mysql55"
+# include_recipe "wordpress"
+# include_recipe "yum-mysql-community::mysql55"
 
 # Download the wp-cli
 # execute "download wp-cli" do
