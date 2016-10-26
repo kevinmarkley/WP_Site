@@ -4,7 +4,7 @@
 
 
 yum_repository 'mysql55-community' do
-  mirrorlist 'http://repo.mysql.com/yum/mysql55-community/el/$releasever/$basearch/'
+  mirrorlist 'http://repo.mysql.com/yum/mysql-5.5-community/el/6/$basearch/'
   description ''
   enabled true
   gpgcheck true

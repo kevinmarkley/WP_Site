@@ -22,4 +22,4 @@ override['php']['mysql']['package'] = 'php55-mysqlnd'
 override['wordpress']['server_name'] = node['fqdn']
 override['wordpress']['server_aliases'] = [node['fqdn'], "wordpress"]
 
-default['yum']['mysql55-community']['baseurl'] = 'http://repo.mysql.com/yum/mysql-5.5-community/el/6/$basearch/'
+# default['yum']['mysql55-community']['baseurl'] = 'http://repo.mysql.com/yum/mysql-5.5-community/el/6/$basearch/'
