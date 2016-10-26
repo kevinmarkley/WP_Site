@@ -11,7 +11,7 @@ yum_repository 'mysql55-community' do
 end
 
 package 'mysql-devel'
-package 'php55-devel'
+# package 'php55-devel'
 
 include_recipe "wordpress"
 include_recipe "yum-mysql-community::mysql55"
