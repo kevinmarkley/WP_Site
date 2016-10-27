@@ -10,10 +10,10 @@ yum_repository 'mysql-community-client' do
   gpgcheck true
 end
 
-# package 'mysql-devel'
+package 'mysql-devel'
 # package 'php55-devel'
 
-include_recipe "wordpress"
+# include_recipe "wordpress"
 # include_recipe "yum-mysql-community::mysql55"
 
 # Download the wp-cli
