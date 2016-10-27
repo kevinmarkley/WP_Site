@@ -3,14 +3,14 @@
 
 
 
-# yum_repository 'mysql-community-client-5.5.53-2' do
-#   mirrorlist 'http://repo.mysql.com/yum/mysql-5.5-community/el/6/x86_64/'
-#   description ''
-#   enabled true
-#   gpgcheck true
-# end
+yum_repository 'mysql-community-client-5.5.53-2' do
+  mirrorlist 'http://repo.mysql.com/yum/mysql-5.5-community/el/6/x86_64/'
+  description ''
+  enabled true
+  gpgcheck true
+end
 
-# package 'mysql-devel'
+package 'mysql-devel'
 package 'php55-devel'
 
 # include_recipe "wordpress"
