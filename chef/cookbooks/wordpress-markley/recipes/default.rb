@@ -4,7 +4,7 @@
 # include_recipe "yum-mysql-community::mysql55"
 
 yum_repository 'mysql-community-client' do
-  mirrorlist 'http://repo.mysql.com/yum/mysql-5.5-community/el/6/x86_64/'
+  mirrorlist 'http://repo.mysql.com/yum/mysql-5.5-community/el/6/x86_64/mysql-community-client-5.5.53-2.el6.x86_64.rpm'
   description ''
   enabled true
   gpgcheck true
