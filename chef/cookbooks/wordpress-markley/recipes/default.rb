@@ -10,7 +10,7 @@ yum_repository 'mysql-community-client' do
   gpgcheck true
 end
 
-package 'mysql-devel'
+# package 'mysql-devel'
 # package 'php55-devel'
 
 include_recipe "wordpress"
