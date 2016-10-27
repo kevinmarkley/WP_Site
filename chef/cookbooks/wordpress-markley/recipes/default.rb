@@ -3,7 +3,7 @@
 
 # include_recipe "yum-mysql-community::mysql55"
 
-yum_repository 'mysql-community-client-5.5.53-2' do
+yum_repository 'mysql-community-client' do
   mirrorlist 'http://repo.mysql.com/yum/mysql-5.5-community/el/6/x86_64'
   description ''
   enabled true
