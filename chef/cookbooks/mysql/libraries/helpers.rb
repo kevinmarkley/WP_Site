@@ -93,7 +93,7 @@ module MysqlCookbook
       return '5.0' if el5?
       return '5.1' if el6?
       return '5.6' if el7?
-      return '5.5' if amazon?
+      return '5.6' if amazon?
 
       # debian
       return '5.1' if squeeze?
