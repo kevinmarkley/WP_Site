@@ -3,13 +3,13 @@
 
 # include_recipe "yum-mysql-community::mysql55"
 
-yum_repository 'mysql55-community' do
-  mirrorlist 'http://repo.mysql.com/yum/mysql-5.5-community/el/7/$basearch/'
+yum_repository 'mysql56-community' do
+  mirrorlist 'http://repo.mysql.com/yum/mysql-5.6-community/el/7/$basearch/'
   description 'MySQL Connectors Community'
-  repositoryid 'mysql-connectors-community'
+  name 'MySQL 5.6 Community Server'
   enabled true
   gpgcheck true
-  gpgkey 'https://raw.githubusercontent.com/rs-services/equinix-public/master/cookbooks/db_mysql/files/centos/mysql_pubkey.asc'
+  # gpgkey 'https://raw.githubusercontent.com/rs-services/equinix-public/master/cookbooks/db_mysql/files/centos/mysql_pubkey.asc'
 end
 
 package 'mysql-devel'
