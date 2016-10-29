@@ -6,8 +6,10 @@
 yum_repository 'mysql55-community' do
   mirrorlist 'http://repo.mysql.com/yum/mysql-5.5-community/el/7/$basearch/'
   description ''
+  name 'MySQL 5.5 Community Server'
   enabled true
   gpgcheck true
+  gpgkey 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql'
 end
 
 package 'mysql-devel'
