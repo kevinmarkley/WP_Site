@@ -3,7 +3,8 @@ maintainer 'Chef Software, Inc.'
 maintainer_email 'cookbooks@chef.io'
 license 'Apache 2.0'
 description 'Provides mysql_service, mysql_config, and mysql_client resources'
-version '8.0.4'
+long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
+version '7.1.1'
 
 supports 'amazon'
 supports 'redhat'
@@ -13,10 +14,14 @@ supports 'oracle'
 supports 'fedora'
 supports 'debian'
 supports 'ubuntu'
+supports 'smartos'
+supports 'omnios'
 supports 'suse'
 supports 'opensuse'
 supports 'opensuseleap'
 
-source_url 'https://github.com/chef-cookbooks/mysql'
-issues_url 'https://github.com/chef-cookbooks/mysql/issues'
-chef_version '>= 12.1' if respond_to?(:chef_version)
+depends 'yum-mysql-community'
+depends 'smf'
+
+source_url 'https://github.com/chef-cookbooks/mysql' if respond_to?(:source_url)
+issues_url 'https://github.com/chef-cookbooks/mysql/issues' if respond_to?(:issues_url)
