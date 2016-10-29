@@ -15,7 +15,7 @@ include_recipe "yum-mysql-community::mysql56"
 package 'mysql-devel'
 # package 'php55-devel'
 
-include_recipe "wordpress"
+# include_recipe "wordpress"
 
 
 # Download the wp-cli
