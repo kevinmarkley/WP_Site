@@ -13,11 +13,11 @@ The yum-mysql-community cookbook takes over management of the default repository
 
 ### Chef
 
-- Chef 12+
+- Chef 11+
 
 ### Cookbooks
 
-- yum version 3.2+
+- yum version 3.0.0 or higher
 - yum-epel
 
 ## Attributes
