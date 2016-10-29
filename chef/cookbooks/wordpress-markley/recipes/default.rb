@@ -15,7 +15,7 @@ include_recipe "yum-mysql-community::mysql56"
 package 'mysql-devel'
 # package 'php55-devel'
 
-# include_recipe "wordpress"
+include_recipe 'wordpress'
 
 
 # Download the wp-cli
@@ -42,17 +42,9 @@ execute "move wp-cli" do
   action :run
 end
 
-#download WP
-execute "download wp" do
-  command "/usr/local/bin/wp wp core download"
-  user 'ec2-user'
-  group 'ec2-user'
-  action :run
-end
-
 # Update wp-admin
 execute "update wp-admin" do
-  command "/usr/local/bin/wp core install --path=\"/var/www/wordpress\" --url=\"#{node['wordpress-markley']['server']}\"  --title=\"Kevin Markley WP\" --admin_user=\"#{node['wordpress-markley']['wp_user']}\" --admin_password=\"#{node['wordpress-markley']['wp_password']}\" --admin_email=\"#{node['wordpress-markley']['email']}\""
+  command "/usr/local/bin/wp core install --path=\"/home/ec2-user/wordpress\" --url=\"#{node['wordpress-markley']['server']}\"  --title=\"Kevin Markley WP\" --admin_user=\"#{node['wordpress-markley']['wp_user']}\" --admin_password=\"#{node['wordpress-markley']['wp_password']}\" --admin_email=\"#{node['wordpress-markley']['email']}\""
   user 'ec2-user'
   group 'ec2-user'
   action :run
