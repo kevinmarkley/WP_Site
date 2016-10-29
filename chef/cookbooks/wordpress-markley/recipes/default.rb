@@ -5,11 +5,11 @@
 
 yum_repository 'mysql55-community' do
   mirrorlist 'http://repo.mysql.com/yum/mysql-5.5-community/el/7/$basearch/'
-  description ''
-  name 'MySQL 5.5 Community Server'
+  description 'MySQL Connectors Community'
+  repositoryid 'mysql-connectors-community'
   enabled true
   gpgcheck true
-  gpgkey 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql'
+  gpgkey 'https://raw.githubusercontent.com/rs-services/equinix-public/master/cookbooks/db_mysql/files/centos/mysql_pubkey.asc'
 end
 
 package 'mysql-devel'
