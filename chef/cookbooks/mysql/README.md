@@ -11,7 +11,6 @@ This cookbook is concerned with the "MySQL Community Server", particularly those
 ## Requirements
 
 - Chef 11 or higher
-- Ruby 1.9 or higher (preferably from the Chef full-stack installer)
 - Network accessible package repositories
 - 'recipe[selinux::disabled]' on RHEL platforms
 
@@ -25,11 +24,13 @@ The following platforms have been tested with Test Kitchen:
 |----------------+-----+-----+-----+-----+-----|
 | debian-7       |     |     | X   |     |     |
 |----------------+-----+-----+-----+-----+-----|
+| debian-8       |     |     | X   |     |     |
+|----------------+-----+-----+-----+-----+-----|
 | ubuntu-12.04   |     |     | X   |     |     |
 |----------------+-----+-----+-----+-----+-----|
 | ubuntu-14.04   |     |     | X   | X   |     |
 |----------------+-----+-----+-----+-----+-----|
-| ubuntu-15.04   |     |     |     | X   |     |
+| ubuntu-16.04   |     |     |     |     | X   |
 |----------------+-----+-----+-----+-----+-----|
 | centos-5       |   X | X   | X   | X   | X   |
 |----------------+-----+-----+-----+-----+-----|
@@ -37,11 +38,9 @@ The following platforms have been tested with Test Kitchen:
 |----------------+-----+-----+-----+-----+-----|
 | centos-7       |     |     | X   | X   | X   |
 |----------------+-----+-----+-----+-----+-----|
-| amazon         |     |     | X   | X   | X   |
+| fedora-23      |     |     |     | X   | X   |
 |----------------+-----+-----+-----+-----+-----|
-| fedora-22      |     |     | X   | X   | X   |
-|----------------+-----+-----+-----+-----+-----|
-| fedora-23      |     |     | X   | X   | X   |
+| openSUSE 13.2  |     |     |     | X   |     |
 |----------------+-----+-----+-----+-----+-----|
 ```
 
@@ -55,7 +54,7 @@ The following platforms have been tested with Test Kitchen:
 Place a dependency on the mysql cookbook in your cookbook's metadata.rb
 
 ```ruby
-depends 'mysql', '~> 6.0'
+depends 'mysql', '~> 7.0'
 ```
 
 Then, in a recipe:
@@ -180,7 +179,7 @@ Please note that when using `notifies` or `subscribes`, the resource to referenc
 - `:create` - Configures everything but the underlying operating system service.
 - `:delete` - Removes everything but the package and data_dir.
 - `:start` - Starts the underlying operating system service
-- `:stop`-  Stops the underlying operating system service
+- `:stop`- Stops the underlying operating system service
 - `:restart` - Restarts the underlying operating system service
 - `:reload` - Reloads the underlying operating system service
 
