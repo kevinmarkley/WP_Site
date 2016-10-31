@@ -1,7 +1,7 @@
 ## See http://wp-cli.org/docs/installing/ for more info
 
 
-include_recipe "yum-mysql-community::mysql56"
+# include_recipe "yum-mysql-community::mysql56"
 
 # yum_repository 'mysql56-community' do
 #   mirrorlist 'http://repo.mysql.com/yum/mysql-5.6-community/el/7/$basearch/'
@@ -12,7 +12,7 @@ include_recipe "yum-mysql-community::mysql56"
 #   # gpgkey 'https://raw.githubusercontent.com/rs-services/equinix-public/master/cookbooks/db_mysql/files/centos/mysql_pubkey.asc'
 # end
 
-package 'mysql-devel'
+# package 'mysql-devel'
 # package 'php55-devel'
 
 include_recipe 'wordpress'
