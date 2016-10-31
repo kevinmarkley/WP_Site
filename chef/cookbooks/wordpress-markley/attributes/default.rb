@@ -17,7 +17,7 @@ override['wordpress']['db']['prefix'] = 'wp_'
 override['wordpress']['db']['host'] = 'localhost'
 
 override['php']['packages'] = %w(php55 php55-devel php55-cli php-pear)
-override['php']['mysql']['package'] = 'php56-mysqlnd'
+override['php']['mysql']['package'] = 'php55-mysqlnd'
 
 override['wordpress']['server_name'] = node['fqdn']
 override['wordpress']['server_aliases'] = [node['fqdn'], "wordpress"]
