@@ -1,7 +1,7 @@
 ## See http://wp-cli.org/docs/installing/ for more info
 
 
-include_recipe "yum-mysql-community::mysql55"
+include_recipe "yum-mysql-community::mysql56"
 
 # yum_repository 'mysql56-community' do
 #   mirrorlist 'http://repo.mysql.com/yum/mysql-5.6-community/el/7/$basearch/'
