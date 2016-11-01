@@ -1,7 +1,5 @@
 ## See http://wp-cli.org/docs/installing/ for more info
 
-include_recipe 'mysql'
-
 mysql_service 'wordpress' do
   port '3306'
   version '5.g'
