@@ -1,5 +1,13 @@
 ## See http://wp-cli.org/docs/installing/ for more info
 
+include_recipe 'mysql'
+
+mysql_service 'wordpress' do
+  port '3306'
+  version '5.g'
+  initial_root_password 'my_root_password'
+  action [:create, :start]
+end
 
 include_recipe "yum-mysql-community::mysql56"
 
