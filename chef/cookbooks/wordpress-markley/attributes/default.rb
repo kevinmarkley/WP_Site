@@ -7,7 +7,7 @@ default['wordpress-markley']['server'] = node['cloud']['wp_server']
 default['wordpress-markley']['email'] = node['cloud']['wp_email']
 
 # Attributes to overrides
-override['wordpress']['db']['mysql_version'] = '5.6'
+override['wordpress']['db']['mysql_version'] = '5.5'
 override['wordpress']['db']['root_password'] = 'my_root_password'
 override['wordpress']['db']['instance_name'] = 'default'
 override['wordpress']['db']['name'] = "wordpressdb"

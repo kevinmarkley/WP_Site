@@ -2,7 +2,7 @@
 
 mysql_service 'wordpress' do
   port '3306'
-  version '5.g'
+  version '5.5'
   initial_root_password 'my_root_password'
   action [:create, :start]
 end
