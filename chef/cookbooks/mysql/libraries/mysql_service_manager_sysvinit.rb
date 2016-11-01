@@ -2,7 +2,7 @@ module MysqlCookbook
   class MysqlServiceManagerSysvinit < MysqlServiceBase
     resource_name :mysql_service_manager_sysvinit
 
-    provides :mysql_service_manager, platform: %w(redhat centos scientific oracle) do |node| # ~FC005
+    provides :mysql_service_manager, platform: %w(redhat centos scientific oracle rhel) do |node| # ~FC005
       node['platform_version'].to_f <= 7.0
     end
 
